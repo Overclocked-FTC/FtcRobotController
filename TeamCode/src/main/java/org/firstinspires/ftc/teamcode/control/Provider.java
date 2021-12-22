@@ -20,7 +20,8 @@ public class Provider {
     public CRServo duckSpinner = null;
     public Servo grabber = null;
 
-    public final static double GRABBER_HOME = 0.0; //Sets the starting positions of the servo
+    public final static double GRABBER_OPEN = 0.0; //Sets the starting positions of the servo
+    public final static double GRABBER_CLOSE = 1.0;
 
 
     //local OpMode members

@@ -41,14 +41,17 @@ public class TeleOp_Iterative extends OpMode {
 
     //Declare OpMode members
     Provider robot = new Provider();
-    double grabberPosition = robot.GRABBER_HOME;
-    final double GRABBER_SPEED = 0.8;
+//    double grabberPosition = robot.GRABBER_HOME;
+//    final double GRABBER_SPEED = 0.8;
 
     //Code to run once when the driver hits INIT
     @Override
     public void init() {
         //Initialize the robot
         robot.init(hardwareMap);
+
+        //Initialize servos
+        robot.grabber.setPosition(robot.GRABBER_OPEN);
 
         //Tell the driver that initialization is complete
         telemetry.addData("Status", "Initialized");
@@ -110,14 +113,18 @@ public class TeleOp_Iterative extends OpMode {
         //Variable for grabber
         boolean closeGrabber = gamepad1.dpad_up;
         boolean openGrabber = gamepad1.dpad_down;
+        double grabberOpen = robot.GRABBER_OPEN;
+        double grabberClose = robot.GRABBER_CLOSE;
 
         //Code to move servo for grabber
-        if (closeGrabber) {
-            grabberPosition += GRABBER_SPEED;
-            robot.grabber.setPosition(grabberPosition);
-        } else if (openGrabber) {
-            grabberPosition -= GRABBER_SPEED;
-            robot.grabber.setPosition(grabberPosition);
+        if (closeGrabber && !openGrabber) {
+//            grabberPosition += GRABBER_SPEED;
+            robot.grabber.setPosition(grabberClose);
+        }
+
+        if (openGrabber && !closeGrabber) {
+//            grabberPosition -= GRABBER_SPEED;
+            robot.grabber.setPosition(grabberOpen);
         }
 
         //DUCK SPINNER CODE
