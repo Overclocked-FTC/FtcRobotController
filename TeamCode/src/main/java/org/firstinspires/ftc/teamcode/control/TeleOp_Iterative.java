@@ -31,6 +31,9 @@ package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+//import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
 @TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
 
@@ -38,6 +41,8 @@ public class TeleOp_Iterative extends OpMode {
 
     //Declare OpMode members
     Provider robot = new Provider();
+    double grabberPosition = robot.GRABBER_HOME;
+    final double GRABBER_SPEED = 0.8;
 
     //Code to run once when the driver hits INIT
     @Override
@@ -52,6 +57,7 @@ public class TeleOp_Iterative extends OpMode {
     //Code to run repeatedly after the driver hits INIT, but before they hit PLAY
     @Override
     public void init_loop() {
+        //robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     //Code to run once when the driver hits PLAY
@@ -64,19 +70,71 @@ public class TeleOp_Iterative extends OpMode {
     //Code to run repeatedly after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
+        //Show the elapsed game time and wheel power
+        telemetry.addData("Status", "Run Time: " + robot.runtime.toString());
+
+        //DRIVE CODE
         //This uses basic math to combine motions and is easier to drive straight
         double drive  = +gamepad1.left_stick_y;
         double strafe = +gamepad1.left_stick_x ;
         double turn   = -gamepad1.right_stick_x;
 
         //Send calculated power to wheels
-        robot.driveLF.setPower( - drive + strafe - turn );
+        //robot.driveLF.setPower( - drive + strafe - turn );
         robot.driveRF.setPower( - drive - strafe + turn );
         robot.driveLB.setPower( - drive - strafe - turn );
         robot.driveRB.setPower( - drive + strafe + turn );
 
-        //Show the elapsed game time and wheel power
-        telemetry.addData("Status", "Run Time: " + robot.runtime.toString());
+        //ARM CODE
+        //Variables for arm
+        boolean armUp = gamepad1.right_bumper;
+        boolean armDown = gamepad1.left_bumper;
+
+        if (armUp && !armDown) {
+            robot.armMotor.setPower(1);
+        }
+
+        if (armDown && !armUp) {
+            robot.armMotor.setPower(-1);
+        }
+
+        if (!armUp && !armDown) {
+            robot.armMotor.setPower(0);
+        }
+
+        //NEW ARM CODE
+        if (armUp && !armDown) {
+        }
+
+        //SERVO GRABBER CODE
+        //Variable for grabber
+        boolean closeGrabber = gamepad1.dpad_up;
+        boolean openGrabber = gamepad1.dpad_down;
+
+        //Code to move servo for grabber
+        if (closeGrabber) {
+            grabberPosition += GRABBER_SPEED;
+            robot.grabber.setPosition(grabberPosition);
+        } else if (openGrabber) {
+            grabberPosition -= GRABBER_SPEED;
+            robot.grabber.setPosition(grabberPosition);
+        }
+
+        //DUCK SPINNER CODE
+        //Variables for duck spinner
+        boolean spin = gamepad1.a;
+        boolean spinBack = gamepad1.b;
+
+        //Code to move servo
+        if (spin) {
+            robot.duckSpinner.setPower(1);
+        }// else {
+//            robot.duckSpinner.setPower(0.5);
+//        }
+
+
+
+
     }
 
     //Code to run once after the driver hits STOP
