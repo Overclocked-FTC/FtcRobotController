@@ -41,8 +41,6 @@ public class TeleOp_Iterative extends OpMode {
 
     //Declare OpMode members
     Provider robot = new Provider();
-//    double grabberPosition = robot.GRABBER_HOME;
-//    final double GRABBER_SPEED = 0.8;
 
     //Code to run once when the driver hits INIT
     @Override
@@ -83,12 +81,12 @@ public class TeleOp_Iterative extends OpMode {
         double turn   = -gamepad1.right_stick_x;
 
         //Send calculated power to wheels
-        //robot.driveLF.setPower( - drive + strafe - turn );
+        robot.driveLF.setPower( - drive + strafe - turn );
         robot.driveRF.setPower( - drive - strafe + turn );
         robot.driveLB.setPower( - drive - strafe - turn );
         robot.driveRB.setPower( - drive + strafe + turn );
 
-        //ARM CODE
+        //ARM CODE (No encoder)
         //Variables for arm
         boolean armUp = gamepad1.right_bumper;
         boolean armDown = gamepad1.left_bumper;
@@ -105,9 +103,8 @@ public class TeleOp_Iterative extends OpMode {
             robot.armMotor.setPower(0);
         }
 
-        //NEW ARM CODE
-        if (armUp && !armDown) {
-        }
+        //ARM CODE(With encoder)
+        
 
         //SERVO GRABBER CODE
         //Variable for grabber
@@ -118,12 +115,10 @@ public class TeleOp_Iterative extends OpMode {
 
         //Code to move servo for grabber
         if (closeGrabber && !openGrabber) {
-//            grabberPosition += GRABBER_SPEED;
             robot.grabber.setPosition(grabberClose);
         }
 
         if (openGrabber && !closeGrabber) {
-//            grabberPosition -= GRABBER_SPEED;
             robot.grabber.setPosition(grabberOpen);
         }
 
@@ -135,13 +130,9 @@ public class TeleOp_Iterative extends OpMode {
         //Code to move servo
         if (spin) {
             robot.duckSpinner.setPower(1);
-        }// else {
-//            robot.duckSpinner.setPower(0.5);
-//        }
-
-
-
-
+        } else {
+            robot.duckSpinner.setPower(0);
+        }
     }
 
     //Code to run once after the driver hits STOP
