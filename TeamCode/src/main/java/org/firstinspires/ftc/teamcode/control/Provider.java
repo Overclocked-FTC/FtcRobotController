@@ -10,6 +10,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.tensorflow.lite.annotations.UsedByReflection;
 
 public class Provider {
+    /*
+    The Provider Class provides all the necessary information to run different mechanisms.
+    This class declares all the motors, servos, and sensors that we will use.
+    It hardware maps the hardware to the software and sets all the basic information for each piece.
+    */
 
     //Public OpMode Members
     public DcMotor driveLF = null;
@@ -20,8 +25,22 @@ public class Provider {
     public CRServo duckSpinner = null;
     public Servo grabber = null;
 
+    //Motor encoder variables
+    static final double MOTOR_TICK_COUNT = 537.7;
+    double quarterTurn = MOTOR_TICK_COUNT/4;
+    int armPos0 = 0;
+    int armPos1 = 28*60;
+    int armPos2 = 28*110;
+    int armPos3 = 28*160;
+    //double pos4 =
+    int slowMo = 1;
+
+    // pos1 = 45, pos2 = 80, pos3 = 100
+
+
+    //Servo variables
     public final static double GRABBER_OPEN = 0.0; //Sets the starting positions of the servo
-    public final static double GRABBER_CLOSE = 0.1;
+    public final static double GRABBER_CLOSE = 0.14; //Sets the closed position of the servo
 
 
     //local OpMode members
@@ -49,7 +68,7 @@ public class Provider {
         driveRF.setDirection(DcMotor.Direction.REVERSE);
         driveLB.setDirection(DcMotor.Direction.FORWARD);
         driveRB.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //Set all motors to zero power
         driveLF.setPower(0);

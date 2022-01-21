@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
+
 //import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
 @TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
@@ -42,11 +44,17 @@ public class TeleOp_Iterative extends OpMode {
     //Declare OpMode members
     Provider robot = new Provider();
 
+    //Class variables
+    boolean changed = false;
+
     //Code to run once when the driver hits INIT
     @Override
     public void init() {
         //Initialize the robot
         robot.init(hardwareMap);
+
+        //Initialize encoders
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //Initialize arm encoder
 
         //Initialize servos
         robot.grabber.setPosition(robot.GRABBER_OPEN);
@@ -76,15 +84,31 @@ public class TeleOp_Iterative extends OpMode {
 
         //DRIVE CODE
         //This uses basic math to combine motions and is easier to drive straight
-        double drive  = +gamepad1.left_stick_y;
-        double strafe = +gamepad1.left_stick_x ;
-        double turn   = -gamepad1.right_stick_x;
+        double drive  = +gamepad1.left_stick_y / 1.5 / robot.slowMo;
+        double strafe = +gamepad1.left_stick_x / 1.5 / robot.slowMo;
+        double turn   = -gamepad1.right_stick_x / 1.5 / robot.slowMo;
 
         //Send calculated power to wheels
         robot.driveLF.setPower( - drive + strafe - turn );
         robot.driveRF.setPower( - drive - strafe + turn );
         robot.driveLB.setPower( - drive - strafe - turn );
         robot.driveRB.setPower( - drive + strafe + turn );
+
+        //Go Slow/Fast code
+
+        boolean slowMoButton = gamepad1.y;
+
+
+        if (slowMoButton && !changed) {
+            if (robot.slowMo == 1) {
+                robot.slowMo = 2;
+            } else {
+                robot.slowMo = 1;
+            }
+            changed = true;
+        } else if (!slowMoButton) {
+            changed = false;
+        }
 
         //ARM CODE (No encoder)
         //Variables for arm
@@ -104,12 +128,34 @@ public class TeleOp_Iterative extends OpMode {
         }
 
         //ARM CODE(With encoder)
-        
+        //Variables for arm
+        boolean setArmPos0 = gamepad2.a;
+        boolean setArmPos1 = gamepad2.b;
+        boolean setArmPos2 = gamepad2.x;
+        boolean setArmPos3 = gamepad2.y;
+
+        //Code to move arm
+        if (setArmPos0) {
+            arm_move(robot.armPos0);
+        }
+
+        if (setArmPos1) {
+            arm_move(robot.armPos1);
+        }
+
+        if (setArmPos2) {
+            arm_move(robot.armPos2);
+        }
+
+        if (setArmPos3) {
+            arm_move(robot.armPos3);
+        }
+
 
         //SERVO GRABBER CODE
         //Variable for grabber
-        boolean closeGrabber = gamepad1.dpad_up;
-        boolean openGrabber = gamepad1.dpad_down;
+        boolean closeGrabber = gamepad2.dpad_up;
+        boolean openGrabber = gamepad2.dpad_down;
         double grabberOpen = robot.GRABBER_OPEN;
         double grabberClose = robot.GRABBER_CLOSE;
 
@@ -133,6 +179,18 @@ public class TeleOp_Iterative extends OpMode {
         } else {
             robot.duckSpinner.setPower(0);
         }
+    }
+
+    public void arm_move(int armPos) {
+        robot.armMotor.setTargetPosition(armPos);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotor.setPower(1);
+
+        while (robot.armMotor.isBusy()) {
+
+        }
+
+        robot.armMotor.setPower(0);
     }
 
     //Code to run once after the driver hits STOP
