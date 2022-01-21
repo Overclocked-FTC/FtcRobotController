@@ -66,7 +66,7 @@ public class TeleOp_Iterative extends OpMode {
     //Code to run repeatedly after the driver hits INIT, but before they hit PLAY
     @Override
     public void init_loop() {
-        //robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
     //Code to run once when the driver hits PLAY
@@ -95,9 +95,7 @@ public class TeleOp_Iterative extends OpMode {
         robot.driveRB.setPower( - drive + strafe + turn );
 
         //Go Slow/Fast code
-
         boolean slowMoButton = gamepad1.y;
-
 
         if (slowMoButton && !changed) {
             if (robot.slowMo == 1) {
@@ -108,23 +106,6 @@ public class TeleOp_Iterative extends OpMode {
             changed = true;
         } else if (!slowMoButton) {
             changed = false;
-        }
-
-        //ARM CODE (No encoder)
-        //Variables for arm
-        boolean armUp = gamepad1.right_bumper;
-        boolean armDown = gamepad1.left_bumper;
-
-        if (armUp && !armDown) {
-            robot.armMotor.setPower(1);
-        }
-
-        if (armDown && !armUp) {
-            robot.armMotor.setPower(-1);
-        }
-
-        if (!armUp && !armDown) {
-            robot.armMotor.setPower(0);
         }
 
         //ARM CODE(With encoder)
@@ -170,8 +151,7 @@ public class TeleOp_Iterative extends OpMode {
 
         //DUCK SPINNER CODE
         //Variables for duck spinner
-        boolean spin = gamepad1.a;
-        boolean spinBack = gamepad1.b;
+        boolean spin = gamepad2.right_bumper;
 
         //Code to move servo
         if (spin) {
@@ -181,16 +161,13 @@ public class TeleOp_Iterative extends OpMode {
         }
     }
 
-    public void arm_move(int armPos) {
-        robot.armMotor.setTargetPosition(armPos);
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void arm_move(double armPos) {
+        robot.armMotor.setTargetPosition(((int)armPos));
         robot.armMotor.setPower(1);
 
-        while (robot.armMotor.isBusy()) {
-
+        if (!robot.armMotor.isBusy()) {
+            robot.armMotor.setPower(0);
         }
-
-        robot.armMotor.setPower(0);
     }
 
     //Code to run once after the driver hits STOP

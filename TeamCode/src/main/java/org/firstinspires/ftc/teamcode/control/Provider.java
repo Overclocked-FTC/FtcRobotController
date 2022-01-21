@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.tensorflow.lite.annotations.UsedByReflection;
 
 public class Provider {
     /*
@@ -17,31 +14,28 @@ public class Provider {
     */
 
     //Public OpMode Members
-    public DcMotor driveLF = null;
+    public DcMotor driveLF = null; //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     public DcMotor driveRF = null;
     public DcMotor driveLB = null;
     public DcMotor driveRB = null;
     public DcMotor armMotor = null;
-    public CRServo duckSpinner = null;
+    public CRServo duckSpinner = null; //https://www.gobilda.com/2000-series-dual-mode-servo-25-4-super-speed/
     public Servo grabber = null;
 
     //Motor encoder variables
     static final double MOTOR_TICK_COUNT = 537.7;
-    double quarterTurn = MOTOR_TICK_COUNT/4;
-    int armPos0 = 0;
-    int armPos1 = 28*60;
-    int armPos2 = 28*110;
-    int armPos3 = 28*160;
+    double motorDegree = MOTOR_TICK_COUNT / 360;
+    double wormGearRatio = 28;
+    double armPos0 = 0; //Arm is down all the way
+    double armPos1 = motorDegree * wormGearRatio * 40; //Last number is degrees of rotation. Shipping hub 1st layer
+    double armPos2 = motorDegree * wormGearRatio * 73; //Shipping hub 2nd layer
+    double armPos3 = motorDegree * wormGearRatio * 107; //Shipping hub 3rd layer
     //double pos4 =
     int slowMo = 1;
-
-    // pos1 = 45, pos2 = 80, pos3 = 100
-
 
     //Servo variables
     public final static double GRABBER_OPEN = 0.0; //Sets the starting positions of the servo
     public final static double GRABBER_CLOSE = 0.14; //Sets the closed position of the servo
-
 
     //local OpMode members
     HardwareMap hwMap           = null;
@@ -82,7 +76,7 @@ public class Provider {
         driveRF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveLB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveRB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Define and initialize servos
         grabber = hwMap.servo.get("grabber");
