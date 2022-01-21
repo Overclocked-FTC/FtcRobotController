@@ -84,15 +84,36 @@ public class TeleOp_Iterative extends OpMode {
 
         //DRIVE CODE
         //This uses basic math to combine motions and is easier to drive straight
-        double drive  = +gamepad1.left_stick_y / 1.5 / robot.slowMo;
-        double strafe = +gamepad1.left_stick_x / 1.5 / robot.slowMo;
-        double turn   = -gamepad1.right_stick_x / 1.5 / robot.slowMo;
+        double max;
+        double drive  = -gamepad1.left_stick_y / 1.5 / robot.slowMo;
+        double strafe =  gamepad1.left_stick_x / 1.5 / robot.slowMo;
+        double turn   =  gamepad1.right_stick_x / 1.5 / robot.slowMo;
+
+        // Combine the joystick requests for each axis-motion to determine each wheel's power.
+        // Set up a variable for each drive wheel to save the power level for telemetry.
+        double leftFrontPower  = drive + strafe + turn;
+        double rightFrontPower = drive - strafe - turn;
+        double leftBackPower   = drive - strafe + turn;
+        double rightBackPower  = drive + strafe - turn;
+
+        // Normalize the values so no wheel power exceeds 100%
+        // This ensures that the robot maintains the desired motion.
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
 
         //Send calculated power to wheels
-        robot.driveLF.setPower( - drive + strafe - turn );
-        robot.driveRF.setPower( - drive - strafe + turn );
-        robot.driveLB.setPower( - drive - strafe - turn );
-        robot.driveRB.setPower( - drive + strafe + turn );
+        robot.driveLF.setPower(leftFrontPower);
+        robot.driveRF.setPower(rightFrontPower);
+        robot.driveLB.setPower(leftBackPower);
+        robot.driveRB.setPower(rightBackPower);
 
         //Go Slow/Fast code
         boolean slowMoButton = gamepad1.y;

@@ -58,10 +58,10 @@ public class Provider {
         armMotor = hwMap.get(DcMotor.class, "arm_motor");
 
         //Reverse the motor that runs backwards when connected directly to the battery
-        driveLF.setDirection(DcMotor.Direction.FORWARD);
-        driveRF.setDirection(DcMotor.Direction.REVERSE);
-        driveLB.setDirection(DcMotor.Direction.FORWARD);
-        driveRB.setDirection(DcMotor.Direction.REVERSE);
+        driveLF.setDirection(DcMotor.Direction.REVERSE);
+        driveRF.setDirection(DcMotor.Direction.FORWARD);
+        driveLB.setDirection(DcMotor.Direction.REVERSE);
+        driveRB.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //Set all motors to zero power
