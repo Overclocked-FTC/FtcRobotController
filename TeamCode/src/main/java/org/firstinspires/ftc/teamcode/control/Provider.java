@@ -2,9 +2,13 @@ package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 public class Provider {
     /*
@@ -27,7 +31,7 @@ public class Provider {
     double motorDegree = MOTOR_TICK_COUNT / 360;
     double wormGearRatio = 28;
     double armPos0 = 0; //Arm is down all the way
-    double armPos1 = motorDegree * wormGearRatio * 40; //Last number is degrees of rotation. Shipping hub 1st layer
+    double armPos1 = motorDegree * wormGearRatio * 42; //Last number is degrees of rotation. Shipping hub 1st layer
     double armPos2 = motorDegree * wormGearRatio * 73; //Shipping hub 2nd layer
     double armPos3 = motorDegree * wormGearRatio * 107; //Shipping hub 3rd layer
     //double pos4 =
@@ -35,7 +39,7 @@ public class Provider {
 
     //Servo variables
     public final static double GRABBER_OPEN = 0.0; //Sets the starting positions of the servo
-    public final static double GRABBER_CLOSE = 0.14; //Sets the closed position of the servo
+    public final static double GRABBER_CLOSE = 0.12; //Sets the closed position of the servo
 
     //local OpMode members
     HardwareMap hwMap           = null;
@@ -58,10 +62,10 @@ public class Provider {
         armMotor = hwMap.get(DcMotor.class, "arm_motor");
 
         //Reverse the motor that runs backwards when connected directly to the battery
-        driveLF.setDirection(DcMotor.Direction.REVERSE);
-        driveRF.setDirection(DcMotor.Direction.FORWARD);
-        driveLB.setDirection(DcMotor.Direction.REVERSE);
-        driveRB.setDirection(DcMotor.Direction.FORWARD);
+        driveLF.setDirection(DcMotor.Direction.FORWARD);
+        driveRF.setDirection(DcMotor.Direction.REVERSE);
+        driveLB.setDirection(DcMotor.Direction.FORWARD);
+        driveRB.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //Set all motors to zero power
@@ -76,11 +80,24 @@ public class Provider {
         driveRF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveLB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveRB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Define and initialize servos
         grabber = hwMap.servo.get("grabber");
         duckSpinner = hwMap.crservo.get("duck_spinner");
 
+        //Define and initialize sensors
+//        webcamName = hwMap.get(WebcamName.class, "Webcam 1");
+
+    }
+
+    public void arm_move(double armPos) {
+        armMotor.setTargetPosition(((int)armPos));
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(1);
+
+        if (!armMotor.isBusy()) {
+            armMotor.setPower(0);
+        }
     }
 }

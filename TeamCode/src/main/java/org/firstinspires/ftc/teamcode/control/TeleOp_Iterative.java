@@ -138,19 +138,19 @@ public class TeleOp_Iterative extends OpMode {
 
         //Code to move arm
         if (setArmPos0) {
-            arm_move(robot.armPos0);
+            robot.arm_move(robot.armPos0);
         }
 
         if (setArmPos1) {
-            arm_move(robot.armPos1);
+            robot.arm_move(robot.armPos1);
         }
 
         if (setArmPos2) {
-            arm_move(robot.armPos2);
+            robot.arm_move(robot.armPos2);
         }
 
         if (setArmPos3) {
-            arm_move(robot.armPos3);
+            robot.arm_move(robot.armPos3);
         }
 
 
@@ -176,7 +176,7 @@ public class TeleOp_Iterative extends OpMode {
 
         //Code to move servo
         if (spin) {
-            robot.duckSpinner.setPower(1);
+            robot.duckSpinner.setPower(-1);
         } else {
             robot.duckSpinner.setPower(0);
         }
@@ -184,6 +184,7 @@ public class TeleOp_Iterative extends OpMode {
 
     public void arm_move(double armPos) {
         robot.armMotor.setTargetPosition(((int)armPos));
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armMotor.setPower(1);
 
         if (!robot.armMotor.isBusy()) {
