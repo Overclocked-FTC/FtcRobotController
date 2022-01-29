@@ -199,7 +199,7 @@ public class AutoBlueLeft extends LinearOpMode {
                         telemetry.update();
                     }
                 }
-                if (runtime.seconds() > 4) {
+                if (runtime.seconds() > 3) {
                     isDuckDetected = true;
                     telemetry.addData("Arm Position", "3");
                     levelPosition = "Level three";
@@ -212,16 +212,29 @@ public class AutoBlueLeft extends LinearOpMode {
 
         //Code that makes the robot move
         drive_forward_time(0.25, 500);
-        drive_forward_time(0.5, 950);
+        drive_forward_time(0.5, 850);
         move_arm(targetLevel);
         turn_right_time(0.4, 650);
-        drive_forward_time(0.25, 200);
+        drive_forward_time(0.25, 175);
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 250);
         move_arm(robot.armPos0);
-        strafe_right_time(0.75, 1200);
-        strafe_right_time(0.25, 250);
+        strafe_right_time(0.75, 1100);
+        strafe_right_time(0.25, 400);
+        sleep(200);
+        strafe_left_time(0.25, 500);
+        sleep(200);
+        drive_forward_time(0.25, 500);
+        drive_forward_time(0.5, 1600);
+        strafe_right_time(0.25, 1000);
+        sleep(200);
+        strafe_left_time(0.25, 500);
+        drive_forward_time(0.25, 1000);
+        spin_duck(3500);
+        drive_backward_time(0.25, 500);
+        drive_backward_time(0.5, 2100);
+        strafe_right_time(0.25, 1000);
         sleep(200);
         drive_backward_time(0.5, 1000);
         strafe_left_time(0.75, 1000);
@@ -330,6 +343,12 @@ public class AutoBlueLeft extends LinearOpMode {
         telemetry.addData("Action", "closed grabber");
         telemetry.update();
 
+    }
+
+    public void spin_duck(long time) {
+        robot.duckSpinner.setPower(1);
+        drive_time(time);
+        robot.duckSpinner.setPower(0);
     }
 
     public void drive_time(long time) {
