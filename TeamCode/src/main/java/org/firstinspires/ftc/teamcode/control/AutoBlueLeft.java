@@ -142,7 +142,7 @@ public class AutoBlueLeft extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(2, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -154,8 +154,12 @@ public class AutoBlueLeft extends LinearOpMode {
         waitForStart();
 
         //Code that finds which barcode the duck is on
+        runtime.reset();
         if (opModeIsActive()) {
             while (opModeIsActive() && !isDuckDetected) {
+                telemetry.addData("Time", "%2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -181,26 +185,25 @@ public class AutoBlueLeft extends LinearOpMode {
                                 isDuckDetected = false;
                             }
 
-                            if (recognition.getLeft() < 317) {
+                            //Determine where the duck is based of the X-axis of the duck
+                            if (recognition.getLeft() < 408) {
                                 telemetry.addData("Arm Position", "1");
                                 levelPosition = "Level one";
                                 targetLevel = robot.armPos1;
-                            } else if (recognition.getLeft() > 317 && recognition.getLeft() < 477) {
+                            } else if (recognition.getLeft() > 408) {
                                 telemetry.addData("Arm Position", "2");
                                 levelPosition = "Level two";
                                 targetLevel = robot.armPos2;
-                            } else if (recognition.getLeft() > 477) {
-                                telemetry.addData("Arm Position", "3");
-                                levelPosition = "Level three";
-                                targetLevel = robot.armPos3;
-                            } else {
-                                telemetry.addData("Arm Position", "null");
-                                levelPosition = "Null";
-                                targetLevel = robot.armPos1;
                             }
                         }
                         telemetry.update();
                     }
+                }
+                if (runtime.seconds() > 4) {
+                    isDuckDetected = true;
+                    telemetry.addData("Arm Position", "3");
+                    levelPosition = "Level three";
+                    targetLevel = robot.armPos3;
                 }
             }
         }
@@ -211,9 +214,10 @@ public class AutoBlueLeft extends LinearOpMode {
         drive_forward_time(0.25, 500);
         drive_forward_time(0.5, 950);
         move_arm(targetLevel);
-        turn_right_time(0.4, 600);
+        turn_right_time(0.4, 650);
+        drive_forward_time(0.25, 200);
         open_grabber();
-        sleep(200);
+        sleep(750);
         drive_backward_time(0.5, 250);
         move_arm(robot.armPos0);
         strafe_right_time(0.75, 1200);

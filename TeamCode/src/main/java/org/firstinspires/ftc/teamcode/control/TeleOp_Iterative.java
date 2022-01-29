@@ -129,7 +129,7 @@ public class TeleOp_Iterative extends OpMode {
             changed = false;
         }
 
-        //ARM CODE(With encoder)
+        //ARM CODE (with encoder)
         //Variables for arm
         boolean setArmPos0 = gamepad2.a;
         boolean setArmPos1 = gamepad2.b;
@@ -153,6 +153,17 @@ public class TeleOp_Iterative extends OpMode {
             robot.arm_move(robot.armPos3);
         }
 
+        //ARM CODE (without encoder)
+        //Variables for arm
+        boolean moveArmUp = gamepad2.dpad_right;
+        boolean moveArmDown = gamepad2.dpad_left;
+
+        //Code to move arm
+        if (moveArmUp && !moveArmDown) {
+            robot.arm_move(robot.armMotor.getCurrentPosition() + robot.motorDegree * robot.wormGearRatio * 1);
+        } else if (moveArmDown && !moveArmUp) {
+            robot.arm_move(robot.armMotor.getCurrentPosition() - robot.motorDegree * robot.wormGearRatio * 1);
+        }
 
         //SERVO GRABBER CODE
         //Variable for grabber
@@ -170,13 +181,15 @@ public class TeleOp_Iterative extends OpMode {
             robot.grabber.setPosition(grabberOpen);
         }
 
+
+
         //DUCK SPINNER CODE
         //Variables for duck spinner
         boolean spin = gamepad2.right_bumper;
 
         //Code to move servo
         if (spin) {
-            robot.duckSpinner.setPower(-1);
+            robot.duckSpinner.setPower(1);
         } else {
             robot.duckSpinner.setPower(0);
         }
