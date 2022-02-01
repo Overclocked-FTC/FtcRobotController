@@ -67,7 +67,6 @@ public class AutoBlueLeft extends LinearOpMode {
 
     // Declare OpMode members.
     Provider robot = new Provider();
-    private ElapsedTime runtime = new ElapsedTime();
 
     //Tensor Flow variables
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -154,10 +153,10 @@ public class AutoBlueLeft extends LinearOpMode {
         waitForStart();
 
         //Code that finds which barcode the duck is on
-        runtime.reset();
+        robot.runtime.reset();
         if (opModeIsActive()) {
             while (opModeIsActive() && !isDuckDetected) {
-                telemetry.addData("Time", "%2.5f S Elapsed", runtime.seconds());
+                telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
                 telemetry.update();
 
                 if (tfod != null) {
@@ -199,7 +198,7 @@ public class AutoBlueLeft extends LinearOpMode {
                         telemetry.update();
                     }
                 }
-                if (runtime.seconds() > 3) {
+                if (robot.runtime.seconds() > 2) {
                     isDuckDetected = true;
                     telemetry.addData("Arm Position", "3");
                     levelPosition = "Level three";
@@ -211,6 +210,7 @@ public class AutoBlueLeft extends LinearOpMode {
         telemetry.update();
 
         //Code that makes the robot move
+        //Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
         drive_forward_time(0.25, 500);
         drive_forward_time(0.5, 850);
         move_arm(targetLevel);
@@ -223,22 +223,28 @@ public class AutoBlueLeft extends LinearOpMode {
         strafe_right_time(0.75, 1100);
         strafe_right_time(0.25, 400);
         sleep(200);
+        //Code that goes to the duck carousel, delivers duck, and comes back
         strafe_left_time(0.25, 500);
         sleep(200);
         drive_forward_time(0.25, 500);
-        drive_forward_time(0.5, 1600);
+        drive_forward_time(0.5, 1400);
         strafe_right_time(0.25, 1000);
         sleep(200);
         strafe_left_time(0.25, 500);
         drive_forward_time(0.25, 1000);
-        spin_duck(3500);
+        spin_duck(4000);
         drive_backward_time(0.25, 500);
-        drive_backward_time(0.5, 2100);
+        drive_backward_time(0.5, 2000);
         strafe_right_time(0.25, 1000);
         sleep(200);
+        //Code that goes into the warehouse and turns to face freight
         drive_backward_time(0.5, 1000);
-        strafe_left_time(0.75, 1000);
-        drive_backward_time(0.5, 500);
+        strafe_left_time(0.75, 250);
+        turn_left_time(0.4, 1300);
+        //Code that goes into the warehouse and parks in the corner
+//        drive_backward_time(0.5, 1000);
+//        strafe_left_time(0.75, 1000);
+//        drive_backward_time(0.5, 500);
 
         //Done with Autonomous
         sleep(5000);
@@ -352,9 +358,9 @@ public class AutoBlueLeft extends LinearOpMode {
     }
 
     public void drive_time(long time) {
-        runtime.reset();
-        while (opModeIsActive() && (runtime.milliseconds() < time)) {
-            telemetry.addData("Time", "%2.5f S Elapsed", runtime.seconds());
+        robot.runtime.reset();
+        while (opModeIsActive() && (robot.runtime.milliseconds() < time)) {
+            telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
             telemetry.update();
         }
     }
