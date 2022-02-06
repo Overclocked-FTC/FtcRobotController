@@ -189,7 +189,7 @@ public class AutoBlueLeft extends LinearOpMode {
                                 telemetry.addData("Arm Position", "1");
                                 levelPosition = "Level one";
                                 targetLevel = robot.armPos1;
-                            } else if (recognition.getLeft() > 408) {
+                            } else if (recognition.getLeft() > 408 && recognition.getLeft() < 500) {
                                 telemetry.addData("Arm Position", "2");
                                 levelPosition = "Level two";
                                 targetLevel = robot.armPos2;
@@ -238,7 +238,7 @@ public class AutoBlueLeft extends LinearOpMode {
         strafe_right_time(0.25, 1000);
         sleep(200);
         //Code that goes into the warehouse and turns to face freight
-        drive_backward_time(0.5, 1000);
+        drive_backward_time(0.5, 700);
         strafe_left_time(0.75, 250);
         turn_left_time(0.4, 1300);
         //Code that goes into the warehouse and parks in the corner
