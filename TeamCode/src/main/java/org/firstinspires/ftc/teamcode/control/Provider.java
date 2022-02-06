@@ -30,10 +30,10 @@ public class Provider {
     static final double MOTOR_TICK_COUNT = 537.7;
     double motorDegree = MOTOR_TICK_COUNT / 360;
     double wormGearRatio = 28;
-    double armPos0 = 0; //Arm is down all the way
-    double armPos1 = motorDegree * wormGearRatio * 48; //Last number is degrees of rotation. Shipping hub 1st layer
-    double armPos2 = motorDegree * wormGearRatio * 80; //Shipping hub 2nd layer
-    double armPos3 = motorDegree * wormGearRatio * 115; //Shipping hub 3rd layer
+    public double armPos0 = 0; //Arm is down all the way
+    public double armPos1 = motorDegree * wormGearRatio * 48; //Last number is degrees of rotation. Shipping hub 1st layer
+    public double armPos2 = motorDegree * wormGearRatio * 80; //Shipping hub 2nd layer
+    public double armPos3 = motorDegree * wormGearRatio * 115; //Shipping hub 3rd layer
     //double pos4 =
     int slowMo = 1;
 

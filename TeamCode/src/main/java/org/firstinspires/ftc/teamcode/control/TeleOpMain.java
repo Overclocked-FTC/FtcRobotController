@@ -37,9 +37,9 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 
 //import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
-@TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
 
-public class TeleOp_Iterative extends OpMode {
+public class TeleOpMain extends OpMode {
 
     //Declare OpMode members
     Provider robot = new Provider();
