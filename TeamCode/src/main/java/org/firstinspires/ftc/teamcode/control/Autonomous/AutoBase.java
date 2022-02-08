@@ -68,7 +68,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.grabber.setPosition(robot.GRABBER_CLOSE);
 
         //Tell that everything has been initialized
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Waiting for camera");
         telemetry.update();
 
         //Initialize Tensor Flow

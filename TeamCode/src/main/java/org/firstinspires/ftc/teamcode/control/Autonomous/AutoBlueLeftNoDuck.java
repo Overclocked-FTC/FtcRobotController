@@ -51,7 +51,6 @@ Steps to complete the objective:
 12. Done
  */
 
-@Disabled
 @Autonomous(name = "Auto Blue Left No Duck", preselectTeleOp = "TeleOp_Iterative")
 public class AutoBlueLeftNoDuck extends AutoBase {
 
