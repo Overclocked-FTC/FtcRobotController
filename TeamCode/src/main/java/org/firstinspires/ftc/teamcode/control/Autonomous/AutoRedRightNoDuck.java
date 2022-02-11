@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.control.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Disabled
 @Autonomous(name = "Auto Red Right No Duck", preselectTeleOp = "TeleOp_Iterative")
 public class AutoRedRightNoDuck extends AutoBase {
 
@@ -23,8 +22,26 @@ public class AutoRedRightNoDuck extends AutoBase {
         detect_barcode_pos();
 
         //Code that makes the robot move
+        //Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
+        drive_forward_time(0.25, 500);
+        drive_forward_time(0.5, 850);
+        move_arm(targetLevel);
+        turn_left_time(0.4, 650);
+        drive_forward_time(0.25, 175);
+        open_grabber();
+        sleep(750);
+        drive_backward_time(0.4, 200);
+        move_arm(robot.armPos0);
+        drive_forward_time(0.25, 100);
+        strafe_left_time(0.75, 1100);
+        strafe_left_time(0.25, 500);
+        sleep(200);
+        //Code that goes into the warehouse and parks in the corner
+        drive_backward_time(0.4, 850);
+        strafe_right_time(0.75, 900);
+        drive_backward_time(0.4, 500);
 
         //Done with Autonomous
-        sleep(5000);
+        sleep(2000);
     }
 }

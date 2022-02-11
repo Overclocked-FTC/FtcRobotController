@@ -305,8 +305,8 @@ public abstract class AutoBase extends LinearOpMode {
 
     }
 
-    public void spin_duck(long time) {
-        robot.duckSpinner.setPower(1);
+    public void spin_duck(double power, long time) {
+        robot.duckSpinner.setPower(power);
         drive_time(time);
         robot.duckSpinner.setPower(0);
     }

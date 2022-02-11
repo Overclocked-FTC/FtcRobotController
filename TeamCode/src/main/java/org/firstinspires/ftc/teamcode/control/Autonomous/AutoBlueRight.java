@@ -40,7 +40,7 @@ public class AutoBlueRight extends AutoBase {
         strafe_left_time(0.25, 500);
         drive_forward_time(0.25, 1100);
         drive_forward_time(0.1, 400);
-        spin_duck(4000);
+        spin_duck(1,4000);
         //Code that parks in the storage
         strafe_left_time(0.5, 1000);
 
