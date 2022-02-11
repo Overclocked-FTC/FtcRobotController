@@ -1,75 +1,23 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+package org.firstinspires.ftc.teamcode.control.Autonomous;
 
-package org.firstinspires.ftc.teamcode.control;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.control.Provider;
 
 import java.util.List;
 
-
-/*
-Autonomous Objective
-Objective: Find which level of the shipping hub the crate needs to get on and place the crate on the
-hub. Drive over to the warehouse and park inside of it.
-Steps to complete the objective:
-1. Use camera to scan where the team shipping element is
-2. Drive forward plowing through the team shipping element until in line with the shipping hub
-3. Turn 90 degrees to the left to face shipping hub
-4. Raise arm to correct position to put the crate on the shipping hub
-5. Drive forward until the grabber is above the shipping hub
-6. Drop the crate
-7. Back up away from the shipping hub
-8. Lower the arm back to pos0
-9. Strafe back to the side of the wall, hitting wall to align with it
-10. drive into the warehouse
-11. Strafe into the corner of the warehouse to get out of the way of alliance team's autonomous
-12. Done
- */
-
-@Autonomous(name = "Auto Blue Left", preselectTeleOp = "TeleOp_Iterative")
-public class AutoBlueLeft extends LinearOpMode {
-
+public abstract class AutoBase extends LinearOpMode {
     // Declare OpMode members.
     Provider robot = new Provider();
 
     //Tensor Flow variables
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    public static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
      * the following 4 detectable objects
      *  0: Ball,
@@ -81,7 +29,7 @@ public class AutoBlueLeft extends LinearOpMode {
      *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
      *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
      */
-    private static final String[] LABELS = {
+    public static final String[] LABELS = {
             "Ball",
             "Cube",
             "Duck",
@@ -92,23 +40,24 @@ public class AutoBlueLeft extends LinearOpMode {
     String levelPosition = "";
     double targetLevel;
 
-    private static final String VUFORIA_KEY =
+    public static final String VUFORIA_KEY =
             "AbfoyYX/////AAABmb/61+6Y2U5Lr+ETwpWurGhmj+twGo3rVHrd61Dn3Gm9bQzp1GCXxWVz+LRj1iQ2pmB0bFiBTqUjXIKtubsE/xcdnG0/ZTHPZkO2jcWObwVsdMDkvP7eHw/VW+XsfyBn687dYVHantczOsr1MC46u8wmBncQXDeRwWSZjM1HjIiWaRPqcE6ksSwBLgZ3N/U+qsPonAkjcS1IHugS78zc4YTTfiVpNsxy8COx7jyCEXqVkIob0kgQXkXdqdfTn3n2Vd48vCKdvjE362R1ltxQzJ+eqzHdK4eIcBIPhIy/TPnu3UuHNmGU+gM/bawBSOM8ylYPhA1CHlutClEIbYK9LYNBjUPYYsG28+GbcPD6fsAH";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    private VuforiaLocalizer vuforia;
+    public VuforiaLocalizer vuforia;
 
     /**
      * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
      * Detection engine.
      */
-    private TFObjectDetector tfod;
+    public TFObjectDetector tfod;
 
-    @Override
-    public void runOpMode() {
+    //Methods
+    //Initialization method
+    public void auto_init() {
         //Initialize the robot
         robot.init(hardwareMap);
 
@@ -119,7 +68,7 @@ public class AutoBlueLeft extends LinearOpMode {
         robot.grabber.setPosition(robot.GRABBER_CLOSE);
 
         //Tell that everything has been initialized
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Waiting for camera");
         telemetry.update();
 
         //Initialize Tensor Flow
@@ -143,16 +92,11 @@ public class AutoBlueLeft extends LinearOpMode {
             // (typically 16/9).
             tfod.setZoom(2, 16.0/9.0);
         }
+    }
 
-        /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        //Code that finds which barcode the duck is on
+    //Camera detection method
+    public void detect_barcode_pos() {
+        //Code that finds which barcode the duck/shipping element is on
         robot.runtime.reset();
         if (opModeIsActive()) {
             while (opModeIsActive() && !isDuckDetected) {
@@ -208,48 +152,42 @@ public class AutoBlueLeft extends LinearOpMode {
         }
         telemetry.addData("Yeet", levelPosition);
         telemetry.update();
-
-        //Code that makes the robot move
-        //Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
-        drive_forward_time(0.25, 500);
-        drive_forward_time(0.5, 850);
-        move_arm(targetLevel);
-        turn_right_time(0.4, 650);
-        drive_forward_time(0.25, 175);
-        open_grabber();
-        sleep(750);
-        drive_backward_time(0.5, 250);
-        move_arm(robot.armPos0);
-        strafe_right_time(0.75, 1100);
-        strafe_right_time(0.25, 400);
-        sleep(200);
-        //Code that goes to the duck carousel, delivers duck, and comes back
-        strafe_left_time(0.25, 500);
-        sleep(200);
-        drive_forward_time(0.25, 500);
-        drive_forward_time(0.5, 1400);
-        strafe_right_time(0.25, 1000);
-        sleep(200);
-        strafe_left_time(0.25, 500);
-        drive_forward_time(0.25, 1000);
-        spin_duck(4000);
-        drive_backward_time(0.25, 500);
-        drive_backward_time(0.5, 2000);
-        strafe_right_time(0.25, 1000);
-        sleep(200);
-        //Code that goes into the warehouse and turns to face freight
-        drive_backward_time(0.5, 700);
-        strafe_left_time(0.75, 250);
-        turn_left_time(0.4, 1300);
-        //Code that goes into the warehouse and parks in the corner
-//        drive_backward_time(0.5, 1000);
-//        strafe_left_time(0.75, 1000);
-//        drive_backward_time(0.5, 500);
-
-        //Done with Autonomous
-        sleep(5000);
     }
 
+    //Vuforia and tensor flow methods
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.6f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+    //Drive methods
     //Here are all the methods used to drive the robot in auto
     public void drive_forward(double power) {
         robot.driveLF.setPower(power);
@@ -329,6 +267,22 @@ public class AutoBlueLeft extends LinearOpMode {
         stop_motors();
     }
 
+    public void drive_time(long time) {
+        robot.runtime.reset();
+        while (opModeIsActive() && (robot.runtime.milliseconds() < time)) {
+            telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    public void stop_motors() {
+        robot.driveLF.setPower(0);
+        robot.driveRF.setPower(0);
+        robot.driveLB.setPower(0);
+        robot.driveRB.setPower(0);
+    }
+
+    //Manipulation methods
     public void move_arm(double position) {
         robot.arm_move(position);
         while (opModeIsActive() && robot.armMotor.isBusy()){
@@ -351,56 +305,9 @@ public class AutoBlueLeft extends LinearOpMode {
 
     }
 
-    public void spin_duck(long time) {
-        robot.duckSpinner.setPower(1);
+    public void spin_duck(double power, long time) {
+        robot.duckSpinner.setPower(power);
         drive_time(time);
         robot.duckSpinner.setPower(0);
-    }
-
-    public void drive_time(long time) {
-        robot.runtime.reset();
-        while (opModeIsActive() && (robot.runtime.milliseconds() < time)) {
-            telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
-            telemetry.update();
-        }
-    }
-
-    public void stop_motors() {
-        robot.driveLF.setPower(0);
-        robot.driveRF.setPower(0);
-        robot.driveLB.setPower(0);
-        robot.driveRB.setPower(0);
-    }
-
-    /**
-     * Initialize the Vuforia localization engine.
-     */
-    private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.6f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 }

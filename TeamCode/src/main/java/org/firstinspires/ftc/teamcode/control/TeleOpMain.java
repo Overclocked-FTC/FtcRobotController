@@ -37,9 +37,9 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 
 //import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
-@TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
 
-public class TeleOp_Iterative extends OpMode {
+public class TeleOpMain extends OpMode {
 
     //Declare OpMode members
     Provider robot = new Provider();
@@ -185,11 +185,14 @@ public class TeleOp_Iterative extends OpMode {
 
         //DUCK SPINNER CODE
         //Variables for duck spinner
-        boolean spin = gamepad2.right_bumper;
+        boolean spinBlue = gamepad2.right_bumper;
+        boolean spinRed = gamepad2.left_bumper;
 
         //Code to move servo
-        if (spin) {
+        if (spinBlue) {
             robot.duckSpinner.setPower(1);
+        } else if (spinRed){
+            robot.duckSpinner.setPower(-1);
         } else {
             robot.duckSpinner.setPower(0);
         }
