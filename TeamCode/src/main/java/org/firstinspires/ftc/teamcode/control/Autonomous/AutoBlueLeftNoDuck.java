@@ -79,13 +79,15 @@ public class AutoBlueLeftNoDuck extends AutoBase {
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 250);
+        drive_backward_time(0.25, 200);
         move_arm(robot.armPos0);
+        drive_forward_time(0.25, 300);
+        strafe_right_time(0.25,200);
         strafe_right_time(0.75, 1100);
-        strafe_right_time(0.25, 400);
-        sleep(200);
+        strafe_right_time(0.25, 500);
         //Code that goes into the warehouse and parks in the corner
         drive_backward_time(0.5, 1000);
-        strafe_left_time(0.75, 1000);
+        strafe_left_time(0.75, 700);
         drive_backward_time(0.5, 500);
 
         //Done with Autonomous
