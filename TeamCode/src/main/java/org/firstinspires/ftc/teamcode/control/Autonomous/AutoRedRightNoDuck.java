@@ -37,8 +37,8 @@ public class AutoRedRightNoDuck extends AutoBase {
         strafe_left_time(0.25, 500);
         sleep(200);
         //Code that goes into the warehouse and parks in the corner
-        drive_backward_time(0.4, 850);
-        strafe_right_time(0.75, 900);
+        drive_backward_time(0.4, 950);
+        strafe_right_time(0.75, 800);
         drive_backward_time(0.4, 500);
 
         //Done with Autonomous

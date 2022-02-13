@@ -38,8 +38,8 @@ public class AutoBlueRight extends AutoBase {
         sleep(200);
         //Code that goes to the duck carousel and delivers the duck
         strafe_left_time(0.25, 500);
-        drive_forward_time(0.25, 1100);
-        drive_forward_time(0.1, 400);
+        drive_forward_time(0.25, 1150);
+        drive_forward_time(0.1, 500);
         spin_duck(1,4000);
         //Code that parks in the storage
         strafe_left_time(0.5, 1000);
