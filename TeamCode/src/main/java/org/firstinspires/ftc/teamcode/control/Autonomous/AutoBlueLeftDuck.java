@@ -30,7 +30,9 @@
 package org.firstinspires.ftc.teamcode.control.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @Autonomous(name = "Auto Blue Left Duck", preselectTeleOp = "TeleOp_Iterative")
 public class AutoBlueLeftDuck extends AutoBase {
 
