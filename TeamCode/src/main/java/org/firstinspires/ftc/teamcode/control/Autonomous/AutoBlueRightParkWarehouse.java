@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.control.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Autonomous(name = "Auto Red Right No Duck", preselectTeleOp = "TeleOp_Iterative")
-public class AutoRedRightNoDuck extends AutoBase {
+@Autonomous(name = "Auto Blue Right Park Warehouse", preselectTeleOp = "TeleOp_Iterative")
+public class AutoBlueRightParkWarehouse extends AutoBase{
 
     @Override
     public void runOpMode() {
@@ -30,18 +29,24 @@ public class AutoRedRightNoDuck extends AutoBase {
         drive_forward_time(0.25, 175);
         open_grabber();
         sleep(750);
-        drive_backward_time(0.4, 200);
-        drive_backward_time(0.25, 200);
-        strafe_right_time(0.25, 400);
+        drive_backward_time(0.5, 200);
         move_arm(robot.armPos0);
-        drive_forward_time(0.25, 100);
-        strafe_left_time(0.75, 1200);
-        strafe_left_time(0.25, 550);
+        turn_right_time(0.4, 1250);
+        strafe_right_time(0.75, 1100);
+        strafe_right_time(0.25, 400);
         sleep(200);
-        //Code that goes into the warehouse and parks in the corner
-        drive_backward_time(0.4, 1100);
-        strafe_right_time(0.75, 800);
-        drive_backward_time(0.4, 500);
+        //Code that goes to the duck carousel and delivers the duck
+        strafe_left_time(0.25, 500);
+        drive_forward_time(0.25, 1200);
+        drive_forward_time(0.1, 550);
+        spin_duck(1,4000);
+        //Code that parks in the warehouse
+        sleep(3000);
+        drive_backward_time(0.25, 500);
+        drive_backward_time(0.5, 1900);
+        strafe_right_time(0.25, 1000);
+        sleep(200);
+        drive_backward_time(0.5, 700);
 
         //Done with Autonomous
         sleep(2000);

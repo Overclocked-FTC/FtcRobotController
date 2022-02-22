@@ -81,7 +81,7 @@ public class AutoBlueLeftNoDuck extends AutoBase {
         drive_backward_time(0.5, 250);
         drive_backward_time(0.25, 200);
         move_arm(robot.armPos0);
-        drive_forward_time(0.25, 300);
+        drive_forward_time(0.25, 400);
         strafe_right_time(0.25,200);
         strafe_right_time(0.75, 1100);
         strafe_right_time(0.25, 500);
