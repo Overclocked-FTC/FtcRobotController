@@ -31,7 +31,7 @@ public class AutoRedLeft extends AutoBase {
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 600);
-        move_arm(robot.armPos0);
+        move_arm(robot.arm.armPos0);
         turn_right_time(0.4, 525);
         sleep(100);
         strafe_right_time(0.60, 500);

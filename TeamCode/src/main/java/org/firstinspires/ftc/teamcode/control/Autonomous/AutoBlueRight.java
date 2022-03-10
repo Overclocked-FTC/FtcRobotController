@@ -31,7 +31,7 @@ public class AutoBlueRight extends AutoBase {
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 100);
-        move_arm(robot.armPos0);
+        move_arm(robot.arm.armPos0);
         turn_right_time(0.4, 1250);
         strafe_right_time(0.75, 1100);
         strafe_right_time(0.25, 400);

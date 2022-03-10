@@ -30,7 +30,7 @@ public class AutoRedLeftParkWarehouse extends AutoBase{
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 600);
-        move_arm(robot.armPos0);
+        move_arm(robot.arm.armPos0);
         close_grabber();
         turn_right_time(0.4, 525);
         sleep(100);

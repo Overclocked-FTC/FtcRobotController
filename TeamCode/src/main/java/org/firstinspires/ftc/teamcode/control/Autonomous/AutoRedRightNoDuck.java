@@ -33,7 +33,7 @@ public class AutoRedRightNoDuck extends AutoBase {
         drive_backward_time(0.4, 200);
         drive_backward_time(0.25, 200);
         strafe_right_time(0.25, 400);
-        move_arm(robot.armPos0);
+        move_arm(robot.arm.armPos0);
         drive_forward_time(0.25, 100);
         strafe_left_time(0.75, 1200);
         strafe_left_time(0.25, 550);
