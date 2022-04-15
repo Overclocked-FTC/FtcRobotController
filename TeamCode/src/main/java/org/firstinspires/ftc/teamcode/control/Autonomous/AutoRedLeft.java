@@ -42,7 +42,7 @@ public class AutoRedLeft extends AutoBase {
         drive_forward_time(0.5, 650);
         drive_forward_time(0.25, 1100);
         drive_forward_time(0.1, 400);
-        spin_duck(-1,4000);
+        spin_duck(-0.4,3500);
         //Code that parks in the storage
         drive_backward_time(0.4, 700);
 

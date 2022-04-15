@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,17 +36,17 @@ public class Drive_Mecanum {
         driveRF = hwMap.get(DcMotor.class, "right_front_drive");
         driveLB = hwMap.get(DcMotor.class, "left_back_drive");
         driveRB = hwMap.get(DcMotor.class, "right_back_drive");
-        driveLF.setDirection(DcMotor.Direction.FORWARD);
-        driveRF.setDirection(DcMotor.Direction.REVERSE);
+        driveLF.setDirection(DcMotor.Direction.REVERSE);
+        driveRF.setDirection(DcMotor.Direction.FORWARD);
         driveLB.setDirection(DcMotor.Direction.FORWARD);
         driveRB.setDirection(DcMotor.Direction.REVERSE);
         driveLF.setPower(0);
         driveRF.setPower(0);
         driveLB.setPower(0);
         driveRB.setPower(0);
-        driveLF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveRF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveLB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveRB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

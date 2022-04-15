@@ -74,7 +74,7 @@ public class AutoBlueLeftDuck extends AutoBase {
         sleep(200);
         strafe_left_time(0.25, 500);
         drive_forward_time(0.25, 1000);
-        spin_duck(1,4000);
+        spin_duck(0.4,3500);
         drive_backward_time(0.25, 500);
         drive_backward_time(0.5, 2000);
         strafe_right_time(0.25, 1000);

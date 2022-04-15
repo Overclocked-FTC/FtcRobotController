@@ -185,12 +185,30 @@ public class TeleOpMain extends OpMode {
         boolean spinRed = gamepad2.left_bumper;
 
         //Code to move servo
+//        if (spinBlue) {
+//            robot.carousel.duckSpinner.setPower(1);
+//        } else if (spinRed){
+//            robot.carousel.duckSpinner.setPower(-1);
+//        } else {
+//            robot.carousel.duckSpinner.setPower(0);
+//        }
+
+        //DUCK SPINNER CODE NEW (WITH MOTOR)
+        //Variables for duck spinner
+        double blueSpin = gamepad2.right_trigger;
+        double blueSpinSpeed = blueSpin;
+        double redSpin = gamepad2.left_trigger;
+        double redSpinSpeed = -redSpin;
+
+        //Code to move motor
+        robot.carousel.spinnerDuck.setPower(blueSpinSpeed + redSpinSpeed);
+
         if (spinBlue) {
-            robot.carousel.duckSpinner.setPower(1);
+            robot.carousel.spinnerDuck.setPower(0.6);
         } else if (spinRed){
-            robot.carousel.duckSpinner.setPower(-1);
+            robot.carousel.spinnerDuck.setPower(-0.6);
         } else {
-            robot.carousel.duckSpinner.setPower(0);
+            robot.carousel.spinnerDuck.setPower(0);
         }
     }
 

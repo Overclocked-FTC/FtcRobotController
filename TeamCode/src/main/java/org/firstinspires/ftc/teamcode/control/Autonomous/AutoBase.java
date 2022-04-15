@@ -272,6 +272,10 @@ public abstract class AutoBase extends LinearOpMode {
         robot.runtime.reset();
         while (opModeIsActive() && (robot.runtime.milliseconds() < time)) {
             telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
+            telemetry.addData("driveLF", robot.drive.driveLF.getCurrentPosition());
+            telemetry.addData("driveRF", robot.drive.driveRF.getCurrentPosition());
+            telemetry.addData("driveLB", robot.drive.driveLB.getCurrentPosition());
+            telemetry.addData("driveRB", robot.drive.driveRB.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -307,8 +311,8 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void spin_duck(double power, long time) {
-        robot.carousel.duckSpinner.setPower(power);
+        robot.carousel.spinnerDuck.setPower(power);
         drive_time(time);
-        robot.carousel.duckSpinner.setPower(0);
+        robot.carousel.spinnerDuck.setPower(0);
     }
 }
