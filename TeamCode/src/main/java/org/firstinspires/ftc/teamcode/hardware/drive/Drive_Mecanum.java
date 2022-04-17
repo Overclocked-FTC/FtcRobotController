@@ -38,8 +38,8 @@ public class Drive_Mecanum {
         driveRB = hwMap.get(DcMotor.class, "right_back_drive");
         driveLF.setDirection(DcMotor.Direction.REVERSE);
         driveRF.setDirection(DcMotor.Direction.FORWARD);
-        driveLB.setDirection(DcMotor.Direction.FORWARD);
-        driveRB.setDirection(DcMotor.Direction.REVERSE);
+        driveLB.setDirection(DcMotor.Direction.REVERSE);
+        driveRB.setDirection(DcMotor.Direction.FORWARD);
         driveLF.setPower(0);
         driveRF.setPower(0);
         driveLB.setPower(0);
