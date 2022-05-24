@@ -29,8 +29,12 @@
 
 package org.firstinspires.ftc.teamcode.control.Autonomous;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
 /*
 Autonomous Objective
@@ -51,13 +55,38 @@ Steps to complete the objective:
 12. Done
  */
 
-@Autonomous(name = "Auto Blue Left No Duck", preselectTeleOp = "TeleOp_Iterative")
-public class AutoBlueLeftNoDuck extends AutoBase {
+@Autonomous(name = "RR Auto Blue Warehouse", preselectTeleOp = "TeleOp_Iterative")
+public class RRAutoBlueWarehouse extends AutoBase {
 
     @Override
     public void runOpMode() {
         //Initialize the robot
         auto_init();
+        SampleMecanumDrive rr_drive = new SampleMecanumDrive(hardwareMap);
+
+        //Set positions
+        Pose2d startPose = new Pose2d(11.811, 64.85827, Math.toRadians(-90));
+        Pose2d allyHubPose = new Pose2d(10.878, 23.622, Math.toRadians(180));
+        Vector2d warehouseEntrancePose = new Vector2d(11.811, 64.85827);
+        Vector2d frontWarehousePose = new Vector2d(42.0, 64.85827);
+
+        rr_drive.setPoseEstimate(startPose);
+
+        //Build all trajectories
+        Trajectory trajHub = rr_drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(allyHubPose)
+                .build();
+
+        Trajectory trajWarehouseEntrance = rr_drive.trajectoryBuilder(trajHub.end(), true)
+                .lineToConstantHeading(warehouseEntrancePose)
+                .addDisplacementMarker(3, () -> {
+                    robot.arm.arm_move(robot.arm.armPos0);
+                })
+                .build();
+
+        Trajectory trajWarehouse = rr_drive.trajectoryBuilder(trajWarehouseEntrance.end(), true)
+                .lineToConstantHeading(frontWarehousePose)
+                .build();
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -70,27 +99,15 @@ public class AutoBlueLeftNoDuck extends AutoBase {
         detect_barcode_pos();
 
         //Code that makes the robot move
-        //Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
-        drive_forward_time(0.25, 500);
-        drive_forward_time(0.5, 850);
+        // Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
         move_arm(targetLevel);
-        turn_right_time(0.4, 650);
-        drive_forward_time(0.25, 175);
+        rr_drive.followTrajectory(trajHub);
         open_grabber();
         sleep(750);
-        drive_backward_time(0.5, 250);
-        drive_backward_time(0.25, 200);
-        move_arm(robot.arm.armPos0);
-        drive_forward_time(0.25, 400);
-        strafe_right_time(0.25,200);
-        strafe_right_time(0.75, 1100);
-        strafe_right_time(0.25, 500);
-        //Code that goes into the warehouse and parks in the corner
-        drive_backward_time(0.5, 1000);
-        strafe_left_time(0.75, 700);
-        drive_backward_time(0.5, 500);
+        rr_drive.followTrajectory(trajWarehouseEntrance);
+        rr_drive.followTrajectory(trajWarehouse);
 
         //Done with Autonomous
-        sleep(5000);
+        sleep(2000);
     }
 }

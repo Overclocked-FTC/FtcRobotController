@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.control.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @Autonomous(name = "Auto Red Left", preselectTeleOp = "TeleOp_Iterative")
 public class AutoRedLeft extends AutoBase {
 
@@ -31,7 +32,7 @@ public class AutoRedLeft extends AutoBase {
         open_grabber();
         sleep(750);
         drive_backward_time(0.5, 600);
-        move_arm(robot.armPos0);
+        move_arm(robot.arm.armPos0);
         turn_right_time(0.4, 525);
         sleep(100);
         strafe_right_time(0.60, 500);
@@ -42,7 +43,7 @@ public class AutoRedLeft extends AutoBase {
         drive_forward_time(0.5, 650);
         drive_forward_time(0.25, 1100);
         drive_forward_time(0.1, 400);
-        spin_duck(-1,4000);
+        spin_duck(-0.4,3500);
         //Code that parks in the storage
         drive_backward_time(0.4, 700);
 

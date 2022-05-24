@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_3000;
+
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
 //import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
@@ -52,12 +54,6 @@ public class TeleOpMain extends OpMode {
     public void init() {
         //Initialize the robot
         robot.init(hardwareMap);
-
-        //Initialize encoders
-        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //Initialize arm encoder
-
-        //Initialize servos
-        robot.grabber.setPosition(robot.GRABBER_OPEN);
 
         //Tell the driver that initialization is complete
         telemetry.addData("Status", "Initialized");
@@ -85,9 +81,9 @@ public class TeleOpMain extends OpMode {
         //DRIVE CODE
         //This uses basic math to combine motions and is easier to drive straight
         double max;
-        double drive  = -gamepad1.left_stick_y / 1.5 / robot.slowMo;
-        double strafe =  gamepad1.left_stick_x / 1.5 / robot.slowMo;
-        double turn   =  gamepad1.right_stick_x / 1.5 / robot.slowMo;
+        double drive  = -gamepad1.left_stick_y / 1.2 / robot.drive.slowMo;
+        double strafe =  gamepad1.left_stick_x / 1.2 / robot.drive.slowMo;
+        double turn   =  gamepad1.right_stick_x / 1.2 / robot.drive.slowMo;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -110,19 +106,19 @@ public class TeleOpMain extends OpMode {
         }
 
         //Send calculated power to wheels
-        robot.driveLF.setPower(leftFrontPower);
-        robot.driveRF.setPower(rightFrontPower);
-        robot.driveLB.setPower(leftBackPower);
-        robot.driveRB.setPower(rightBackPower);
+        robot.drive.driveLF.setPower(leftFrontPower);
+        robot.drive.driveRF.setPower(rightFrontPower);
+        robot.drive.driveLB.setPower(leftBackPower);
+        robot.drive.driveRB.setPower(rightBackPower);
 
         //Go Slow/Fast code
         boolean slowMoButton = gamepad1.y;
 
         if (slowMoButton && !changed) {
-            if (robot.slowMo == 1) {
-                robot.slowMo = 2;
+            if (robot.drive.slowMo == 1) {
+                robot.drive.slowMo = 2;
             } else {
-                robot.slowMo = 1;
+                robot.drive.slowMo = 1;
             }
             changed = true;
         } else if (!slowMoButton) {
@@ -135,23 +131,29 @@ public class TeleOpMain extends OpMode {
         boolean setArmPos1 = gamepad2.b;
         boolean setArmPos2 = gamepad2.x;
         boolean setArmPos3 = gamepad2.y;
+        boolean setArmPosShare = gamepad2.right_stick_button;
 
         //Code to move arm
         if (setArmPos0) {
-            robot.arm_move(robot.armPos0);
+            robot.arm.arm_move(robot.arm.armPos0);
         }
 
         if (setArmPos1) {
-            robot.arm_move(robot.armPos1);
+            robot.arm.arm_move(robot.arm.armPos1);
         }
 
         if (setArmPos2) {
-            robot.arm_move(robot.armPos2);
+            robot.arm.arm_move(robot.arm.armPos2);
         }
 
         if (setArmPos3) {
-            robot.arm_move(robot.armPos3);
+            robot.arm.arm_move(robot.arm.armPos3);
         }
+
+        if (setArmPosShare) {
+            robot.arm.arm_move(robot.arm.armPosShare);
+        }
+
 
         //ARM CODE (without encoder)
         //Variables for arm
@@ -160,25 +162,25 @@ public class TeleOpMain extends OpMode {
 
         //Code to move arm
         if (moveArmUp && !moveArmDown) {
-            robot.arm_move(robot.armMotor.getCurrentPosition() + robot.motorDegree * robot.wormGearRatio * 1);
+            robot.arm.arm_move(robot.arm.armMotor.getCurrentPosition() + robot.arm.motorDegree * robot.arm.wormGearRatio * 1);
         } else if (moveArmDown && !moveArmUp) {
-            robot.arm_move(robot.armMotor.getCurrentPosition() - robot.motorDegree * robot.wormGearRatio * 1);
+            robot.arm.arm_move(robot.arm.armMotor.getCurrentPosition() - robot.arm.motorDegree * robot.arm.wormGearRatio * 1);
         }
 
         //SERVO GRABBER CODE
         //Variable for grabber
         boolean closeGrabber = gamepad2.dpad_up;
         boolean openGrabber = gamepad2.dpad_down;
-        double grabberOpen = robot.GRABBER_OPEN;
-        double grabberClose = robot.GRABBER_CLOSE;
+        double grabberOpen = Grabber_3000.GRABBER_OPEN;
+        double grabberClose = Grabber_3000.GRABBER_CLOSE;
 
         //Code to move servo for grabber
         if (closeGrabber && !openGrabber) {
-            robot.grabber.setPosition(grabberClose);
+            robot.claw.grabber.setPosition(grabberClose);
         }
 
         if (openGrabber && !closeGrabber) {
-            robot.grabber.setPosition(grabberOpen);
+            robot.claw.grabber.setPosition(grabberOpen);
         }
 
 
@@ -189,22 +191,30 @@ public class TeleOpMain extends OpMode {
         boolean spinRed = gamepad2.left_bumper;
 
         //Code to move servo
+//        if (spinBlue) {
+//            robot.carousel.duckSpinner.setPower(1);
+//        } else if (spinRed){
+//            robot.carousel.duckSpinner.setPower(-1);
+//        } else {
+//            robot.carousel.duckSpinner.setPower(0);
+//        }
+
+        //DUCK SPINNER CODE NEW (WITH MOTOR)
+        //Variables for duck spinner
+        double blueSpin = gamepad2.right_trigger;
+        double blueSpinSpeed = blueSpin;
+        double redSpin = gamepad2.left_trigger;
+        double redSpinSpeed = -redSpin;
+
+        //Code to move motor
+        robot.carousel.spinnerDuck.setPower(blueSpinSpeed + redSpinSpeed);
+
         if (spinBlue) {
-            robot.duckSpinner.setPower(1);
+            robot.carousel.spinnerDuck.setPower(0.6);
         } else if (spinRed){
-            robot.duckSpinner.setPower(-1);
+            robot.carousel.spinnerDuck.setPower(-0.6);
         } else {
-            robot.duckSpinner.setPower(0);
-        }
-    }
-
-    public void arm_move(double armPos) {
-        robot.armMotor.setTargetPosition(((int)armPos));
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armMotor.setPower(1);
-
-        if (!robot.armMotor.isBusy()) {
-            robot.armMotor.setPower(0);
+            robot.carousel.spinnerDuck.setPower(0);
         }
     }
 

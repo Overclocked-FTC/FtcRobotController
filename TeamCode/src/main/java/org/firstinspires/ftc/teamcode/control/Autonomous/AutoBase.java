@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.control.Provider;
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_3000;
 
 import java.util.List;
 
@@ -62,10 +63,10 @@ public abstract class AutoBase extends LinearOpMode {
         robot.init(hardwareMap);
 
         //Initialize encoders
-        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //Initialize arm encoder
+        robot.arm.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //Initialize arm encoder
 
         //Initialize servos
-        robot.grabber.setPosition(robot.GRABBER_CLOSE);
+        robot.claw.grabber.setPosition(Grabber_3000.GRABBER_CLOSE);
 
         //Tell that everything has been initialized
         telemetry.addData("Status", "Waiting for camera");
@@ -121,7 +122,7 @@ public abstract class AutoBase extends LinearOpMode {
                             i++;
 
                             // check label to see if the camera now sees a Duck
-                            if (recognition.getLabel().equals("Duck")) {
+                            if (recognition.getLabel().equals("Duck") || recognition.getLabel().equals("Cube")) {
                                 isDuckDetected = true;
                                 telemetry.addData("Object Detected", "Duck");
                             } else {
@@ -132,11 +133,11 @@ public abstract class AutoBase extends LinearOpMode {
                             if (recognition.getLeft() < 408) {
                                 telemetry.addData("Arm Position", "1");
                                 levelPosition = "Level one";
-                                targetLevel = robot.armPos1;
+                                targetLevel = robot.arm.armPos1;
                             } else if (recognition.getLeft() > 408 && recognition.getLeft() < 500) {
                                 telemetry.addData("Arm Position", "2");
                                 levelPosition = "Level two";
-                                targetLevel = robot.armPos2;
+                                targetLevel = robot.arm.armPos2;
                             }
                         }
                         telemetry.update();
@@ -146,7 +147,7 @@ public abstract class AutoBase extends LinearOpMode {
                     isDuckDetected = true;
                     telemetry.addData("Arm Position", "3");
                     levelPosition = "Level three";
-                    targetLevel = robot.armPos3;
+                    targetLevel = robot.arm.armPos3;
                 }
             }
         }
@@ -190,10 +191,10 @@ public abstract class AutoBase extends LinearOpMode {
     //Drive methods
     //Here are all the methods used to drive the robot in auto
     public void drive_forward(double power) {
-        robot.driveLF.setPower(power);
-        robot.driveRF.setPower(power);
-        robot.driveLB.setPower(power);
-        robot.driveRB.setPower(power);
+        robot.drive.driveLF.setPower(power);
+        robot.drive.driveRF.setPower(power);
+        robot.drive.driveLB.setPower(power);
+        robot.drive.driveRB.setPower(power);
     }
 
     public void drive_forward_time(double power, long time) {
@@ -203,10 +204,10 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void drive_backward(double power) {
-        robot.driveLF.setPower(-power);
-        robot.driveRF.setPower(-power);
-        robot.driveLB.setPower(-power);
-        robot.driveRB.setPower(-power);
+        robot.drive.driveLF.setPower(-power);
+        robot.drive.driveRF.setPower(-power);
+        robot.drive.driveLB.setPower(-power);
+        robot.drive.driveRB.setPower(-power);
     }
 
     public void drive_backward_time(double power, long time) {
@@ -216,10 +217,10 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void strafe_left(double power) {
-        robot.driveLF.setPower(-power);
-        robot.driveRF.setPower(power);
-        robot.driveLB.setPower(power);
-        robot.driveRB.setPower(-power);
+        robot.drive.driveLF.setPower(-power);
+        robot.drive.driveRF.setPower(power);
+        robot.drive.driveLB.setPower(power);
+        robot.drive.driveRB.setPower(-power);
     }
 
     public void strafe_left_time(double power, long time) {
@@ -229,10 +230,10 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void strafe_right(double power) {
-        robot.driveLF.setPower(power);
-        robot.driveRF.setPower(-power);
-        robot.driveLB.setPower(-power);
-        robot.driveRB.setPower(power);
+        robot.drive.driveLF.setPower(power);
+        robot.drive.driveRF.setPower(-power);
+        robot.drive.driveLB.setPower(-power);
+        robot.drive.driveRB.setPower(power);
     }
 
     public void strafe_right_time(double power, long time) {
@@ -242,10 +243,10 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void turn_left(double power) {
-        robot.driveLF.setPower(-power);
-        robot.driveRF.setPower(power);
-        robot.driveLB.setPower(-power);
-        robot.driveRB.setPower(power);
+        robot.drive.driveLF.setPower(-power);
+        robot.drive.driveRF.setPower(power);
+        robot.drive.driveLB.setPower(-power);
+        robot.drive.driveRB.setPower(power);
     }
 
     public void turn_left_time(double power, long time) {
@@ -255,10 +256,10 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     public void turn_right(double power) {
-        robot.driveLF.setPower(power);
-        robot.driveRF.setPower(-power);
-        robot.driveLB.setPower(power);
-        robot.driveRB.setPower(-power);
+        robot.drive.driveLF.setPower(power);
+        robot.drive.driveRF.setPower(-power);
+        robot.drive.driveLB.setPower(power);
+        robot.drive.driveRB.setPower(-power);
     }
 
     public void turn_right_time(double power, long time) {
@@ -271,43 +272,47 @@ public abstract class AutoBase extends LinearOpMode {
         robot.runtime.reset();
         while (opModeIsActive() && (robot.runtime.milliseconds() < time)) {
             telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
+            telemetry.addData("driveLF", robot.drive.driveLF.getCurrentPosition());
+            telemetry.addData("driveRF", robot.drive.driveRF.getCurrentPosition());
+            telemetry.addData("driveLB", robot.drive.driveLB.getCurrentPosition());
+            telemetry.addData("driveRB", robot.drive.driveRB.getCurrentPosition());
             telemetry.update();
         }
     }
 
     public void stop_motors() {
-        robot.driveLF.setPower(0);
-        robot.driveRF.setPower(0);
-        robot.driveLB.setPower(0);
-        robot.driveRB.setPower(0);
+        robot.drive.driveLF.setPower(0);
+        robot.drive.driveRF.setPower(0);
+        robot.drive.driveLB.setPower(0);
+        robot.drive.driveRB.setPower(0);
     }
 
     //Manipulation methods
     public void move_arm(double position) {
-        robot.arm_move(position);
-        while (opModeIsActive() && robot.armMotor.isBusy()){
+        robot.arm.arm_move(position);
+        while (opModeIsActive() && robot.arm.armMotor.isBusy()){
             telemetry.addData("Action", "moving arm");
             telemetry.update();
         }
-        robot.armMotor.setPower(0);
+        robot.arm.armMotor.setPower(0);
     }
 
     public void open_grabber() {
-        robot.grabber.setPosition(Provider.GRABBER_OPEN);
+        robot.claw.grabber.setPosition(Grabber_3000.GRABBER_OPEN);
         telemetry.addData("Action", "opened grabber");
         telemetry.update();
     }
 
     public void close_grabber() {
-        robot.grabber.setPosition(Provider.GRABBER_CLOSE);
+        robot.claw.grabber.setPosition(Grabber_3000.GRABBER_CLOSE);
         telemetry.addData("Action", "closed grabber");
         telemetry.update();
 
     }
 
     public void spin_duck(double power, long time) {
-        robot.duckSpinner.setPower(power);
+        robot.carousel.spinnerDuck.setPower(power);
         drive_time(time);
-        robot.duckSpinner.setPower(0);
+        robot.carousel.spinnerDuck.setPower(0);
     }
 }
