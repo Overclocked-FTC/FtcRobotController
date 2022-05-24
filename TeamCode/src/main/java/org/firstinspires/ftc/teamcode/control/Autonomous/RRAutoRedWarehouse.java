@@ -12,15 +12,15 @@ public class RRAutoRedWarehouse extends AutoBase {
 
     @Override
     public void runOpMode() {
-//Initialize the robot
+        //Initialize the robot
         auto_init();
         SampleMecanumDrive rr_drive = new SampleMecanumDrive(hardwareMap);
 
         //Set positions
         Pose2d startPose = new Pose2d(11.811, -64.85827, Math.toRadians(90));
         Pose2d allyHubPose = new Pose2d(10.878, -23.622, Math.toRadians(180));
-        Pose2d warehouseEntrancePose = new Pose2d(11.811, -64.85827, Math.toRadians(0));
-        Pose2d frontWarehousePose = new Pose2d(35.433, -64.85827, Math.toRadians(0));
+        Vector2d warehouseEntrancePose = new Vector2d(11.811, -64.85827);
+        Vector2d frontWarehousePose = new Vector2d(42.0, -64.85827);
         Vector2d sideWarehousePose = new Vector2d(35.433, -41.23627);
         Vector2d backWarehousePose = new Vector2d(59.055, -41.23627);
 
@@ -33,20 +33,20 @@ public class RRAutoRedWarehouse extends AutoBase {
                 .build();
 
         Trajectory trajWarehouseEntrance = rr_drive.trajectoryBuilder(trajHub.end(), true)
-                .lineToLinearHeading(warehouseEntrancePose)
-                .addDisplacementMarker(.5, () -> {
+                .lineToConstantHeading(warehouseEntrancePose)
+                .addDisplacementMarker(3, () -> {
                     robot.arm.arm_move(robot.arm.armPos0);
                 })
                 .build();
 
-        Trajectory trajWarehouse = rr_drive.trajectoryBuilder(trajWarehouseEntrance.end())
-                .lineToLinearHeading(frontWarehousePose)
-                .splineTo(sideWarehousePose, Math.toRadians(90))
-                .splineTo(backWarehousePose, Math.toRadians(180))
+        Trajectory trajWarehouse = rr_drive.trajectoryBuilder(trajWarehouseEntrance.end(), true)
+                .lineToConstantHeading(frontWarehousePose)
                 .build();
 
-//        Trajectory trajStorage = rr_drive.trajectoryBuilder(trajCarousel.end())
-//                .lineToLinearHeading(storagePose)
+//        Trajectory trajWarehouseBack = rr_drive.trajectoryBuilder(trajWarehouseEntrance.end())
+//                .lineToLinearHeading(frontWarehousePose)
+//                .splineTo(sideWarehousePose, Math.toRadians(90))
+//                .splineTo(backWarehousePose, Math.toRadians(180))
 //                .build();
 
         /** Wait for the game to begin */

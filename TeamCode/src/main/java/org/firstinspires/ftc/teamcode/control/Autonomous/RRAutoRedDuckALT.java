@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.control.Autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "RR Auto Red Duck", preselectTeleOp = "TeleOp_Iterative")
-public class RRAutoRedDuck extends AutoBase {
+@Disabled
+@Autonomous(name = "RR Auto Red Duck ALT", preselectTeleOp = "TeleOp_Iterative")
+public class RRAutoRedDuckALT extends AutoBase {
 
     //Variables
     public static double DISTANCE = 50;
@@ -28,19 +30,21 @@ public class RRAutoRedDuck extends AutoBase {
         rr_drive.setPoseEstimate(startPose);
 
         //Build all trajectories
-        Trajectory trajHub = rr_drive.trajectoryBuilder(startPose)
+
+
+        Trajectory trajCarousel = rr_drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(carouselPose)
+                .build();
+
+        Trajectory trajHub = rr_drive.trajectoryBuilder(trajCarousel.end())
                 .lineToLinearHeading(allyHubPose)
                 .build();
 
-        Trajectory trajCarousel = rr_drive.trajectoryBuilder(trajHub.end())
-                .lineToLinearHeading(carouselPose)
+        Trajectory trajStorage = rr_drive.trajectoryBuilder(trajHub.end())
+                .lineToLinearHeading(storagePose)
                 .addDisplacementMarker(1.0, () -> {
                     robot.arm.arm_move(robot.arm.armPos0);
                 })
-                .build();
-
-        Trajectory trajStorage = rr_drive.trajectoryBuilder(trajCarousel.end())
-                .lineToLinearHeading(storagePose)
                 .build();
 
         /** Wait for the game to begin */
@@ -55,12 +59,13 @@ public class RRAutoRedDuck extends AutoBase {
 
         //Code that makes the robot move
         // Code that goes to alliance shipping hub, drops off pre-loaded freight, and comes back
+        rr_drive.followTrajectory(trajCarousel);
+        spin_duck(-0.38,3500);
+        rr_drive.turn(0);
         move_arm(targetLevel);
         rr_drive.followTrajectory(trajHub);
         open_grabber();
         sleep(750);
-        rr_drive.followTrajectory(trajCarousel);
-        spin_duck(-0.38,3500);
         rr_drive.followTrajectory(trajStorage);
 
         //Done with Autonomous

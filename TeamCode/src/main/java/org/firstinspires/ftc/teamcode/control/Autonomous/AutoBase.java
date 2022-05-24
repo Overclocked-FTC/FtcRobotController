@@ -122,7 +122,7 @@ public abstract class AutoBase extends LinearOpMode {
                             i++;
 
                             // check label to see if the camera now sees a Duck
-                            if (recognition.getLabel().equals("Duck")) {
+                            if (recognition.getLabel().equals("Duck") || recognition.getLabel().equals("Cube")) {
                                 isDuckDetected = true;
                                 telemetry.addData("Object Detected", "Duck");
                             } else {

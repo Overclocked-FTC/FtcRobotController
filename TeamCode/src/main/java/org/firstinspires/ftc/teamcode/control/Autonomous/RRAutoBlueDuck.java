@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "RR Auto Blue Right", preselectTeleOp = "TeleOp_Iterative")
+@Autonomous(name = "RR Auto Blue Duck", preselectTeleOp = "TeleOp_Iterative")
 public class RRAutoBlueDuck extends AutoBase {
 
     @Override
@@ -18,7 +18,7 @@ public class RRAutoBlueDuck extends AutoBase {
         //Set positions
         Pose2d startPose = new Pose2d(-35.4331, 64.85827, Math.toRadians(-90));
         Pose2d allyHubPose = new Pose2d(-34.5, 23.622, Math.toRadians(0));
-        Pose2d carouselPose = new Pose2d(-60.35827, 57.2, Math.toRadians(180));
+        Pose2d carouselPose = new Pose2d(-60.50, 58.0, Math.toRadians(180));
         Pose2d storagePose = new Pose2d(-59.0551, 35.4331, Math.toRadians(0));
 
 
@@ -31,7 +31,7 @@ public class RRAutoBlueDuck extends AutoBase {
 
         Trajectory trajCarousel = rr_drive.trajectoryBuilder(trajHub.end())
                 .lineToLinearHeading(carouselPose)
-                .addDisplacementMarker(.5, () -> {
+                .addDisplacementMarker(3, () -> {
                     robot.arm.arm_move(robot.arm.armPos0);
                 })
                 .build();

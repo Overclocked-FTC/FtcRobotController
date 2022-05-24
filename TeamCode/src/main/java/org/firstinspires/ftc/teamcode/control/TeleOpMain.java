@@ -81,9 +81,9 @@ public class TeleOpMain extends OpMode {
         //DRIVE CODE
         //This uses basic math to combine motions and is easier to drive straight
         double max;
-        double drive  = -gamepad1.left_stick_y / 1.5 / robot.drive.slowMo;
-        double strafe =  gamepad1.left_stick_x / 1.5 / robot.drive.slowMo;
-        double turn   =  gamepad1.right_stick_x / 1.5 / robot.drive.slowMo;
+        double drive  = -gamepad1.left_stick_y / 1.2 / robot.drive.slowMo;
+        double strafe =  gamepad1.left_stick_x / 1.2 / robot.drive.slowMo;
+        double turn   =  gamepad1.right_stick_x / 1.2 / robot.drive.slowMo;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -131,6 +131,7 @@ public class TeleOpMain extends OpMode {
         boolean setArmPos1 = gamepad2.b;
         boolean setArmPos2 = gamepad2.x;
         boolean setArmPos3 = gamepad2.y;
+        boolean setArmPosShare = gamepad2.right_stick_button;
 
         //Code to move arm
         if (setArmPos0) {
@@ -148,6 +149,11 @@ public class TeleOpMain extends OpMode {
         if (setArmPos3) {
             robot.arm.arm_move(robot.arm.armPos3);
         }
+
+        if (setArmPosShare) {
+            robot.arm.arm_move(robot.arm.armPosShare);
+        }
+
 
         //ARM CODE (without encoder)
         //Variables for arm

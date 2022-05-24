@@ -20,6 +20,7 @@ public class Arm {
     public double armPos1 = motorDegree * wormGearRatio * 50; //Last number is degrees of rotation. Shipping hub 1st layer
     public double armPos2 = motorDegree * wormGearRatio * 82; //Shipping hub 2nd layer
     public double armPos3 = motorDegree * wormGearRatio * 115; //Shipping hub 3rd layer
+    public double armPosShare = motorDegree * wormGearRatio * 60;
 
     //Constructor
     public Arm() {

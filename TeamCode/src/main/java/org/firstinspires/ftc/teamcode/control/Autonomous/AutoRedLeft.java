@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.control.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @Autonomous(name = "Auto Red Left", preselectTeleOp = "TeleOp_Iterative")
 public class AutoRedLeft extends AutoBase {
 
