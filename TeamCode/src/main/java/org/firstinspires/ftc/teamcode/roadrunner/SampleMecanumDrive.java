@@ -114,7 +114,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-//         BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
+        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "left_front_drive");
         leftRear = hardwareMap.get(DcMotorEx.class, "left_back_drive");
