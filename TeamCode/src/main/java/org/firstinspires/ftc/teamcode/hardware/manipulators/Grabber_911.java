@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware.manipulators;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Grabber_3000 {
+public class Grabber_911 {
     //Hardware Components
     public Servo grabber = null;
 

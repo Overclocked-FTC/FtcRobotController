@@ -1,18 +1,11 @@
 package org.firstinspires.ftc.teamcode.control;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.hardware.drive.Drive_Mecanum;
-import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
-import org.firstinspires.ftc.teamcode.hardware.manipulators.Carousel_Spinner;
-import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_3000;
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Twin_Towers;
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_911;
 
 public class Provider {
     /*
@@ -22,10 +15,9 @@ public class Provider {
     */
 
     //Hardware Components
-    public Arm arm = new Arm();
-    public Carousel_Spinner carousel = new Carousel_Spinner();
+    public Twin_Towers towers = new Twin_Towers();
+    public Grabber_911 claw = new Grabber_911();
     public Drive_Mecanum drive = new Drive_Mecanum();
-    public Grabber_3000 claw = new Grabber_3000();
 
     //local OpMode members
     public ElapsedTime runtime  = new ElapsedTime();
@@ -36,8 +28,7 @@ public class Provider {
 
     //Initialize standard Hardware interfaces
     public void init(HardwareMap hwMap) {
-        arm.init(hwMap);
-        carousel.init(hwMap);
+        towers.init(hwMap);
         claw.init(hwMap);
         drive.init(hwMap);
     }
