@@ -19,10 +19,10 @@ public class Twin_Towers {
     public double pulleyCircumference = 112; //Circumference in mm of pulley
     public double motorTickPerMillimeter = MOTOR_TICK_COUNT / pulleyCircumference;
     public double liftPos0 = 0; //Arm is down all the way
-    public double liftPos1 = motorTickPerMillimeter * -343; //Last number is height in millimeters. Low Junction
-    public double liftPos2 = motorTickPerMillimeter * -597; //Medium Junction
-    public double liftPos3 = motorTickPerMillimeter * -850; //High Junction
-    public double liftPosTest = motorTickPerMillimeter * -100;
+    public double liftPos1 = motorTickPerMillimeter * 343; //Last number is height in millimeters. Low Junction
+    public double liftPos2 = motorTickPerMillimeter * 597; //Medium Junction
+    public double liftPos3 = motorTickPerMillimeter * 850; //High Junction
+    public double liftPosTest = motorTickPerMillimeter * 100;
 
     //Constructor
     public Twin_Towers() {
@@ -39,10 +39,10 @@ public class Twin_Towers {
     }
 
     //Method to move the arm
-    public void arm_move(double liftPos) {
+    public void towers_lift(double liftPos) {
         liftMotor.setTargetPosition(((int)liftPos));
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(.25);
+        liftMotor.setPower(.75);
 
         if (!liftMotor.isBusy()) {
             liftMotor.setPower(0);

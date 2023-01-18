@@ -131,42 +131,42 @@ public class TeleOpMain extends OpMode {
 
         //Code to move arm
         if (setArmPos0) {
-            robot.towers.arm_move(robot.towers.liftPos0);
+            robot.towers.towers_lift(robot.towers.liftPos0);
         }
 
         if (setArmPos1) {
-            robot.towers.arm_move(robot.towers.liftPos1);
+            robot.towers.towers_lift(robot.towers.liftPos1);
         }
 
         if (setArmPos2) {
-            robot.towers.arm_move(robot.towers.liftPos2);
+            robot.towers.towers_lift(robot.towers.liftPos2);
         }
 
         if (setArmPos3) {
-            robot.towers.arm_move(robot.towers.liftPos3);
+            robot.towers.towers_lift(robot.towers.liftPos3);
         }
 
         if (setArmPosTest) {
-            robot.towers.arm_move(robot.towers.liftPosTest);
+            robot.towers.towers_lift(robot.towers.liftPosTest);
         }
 
 
         //ARM CODE (without encoder)
         //Variables for arm
-        boolean moveArmUp = gamepad2.dpad_right;
-        boolean moveArmDown = gamepad2.dpad_left;
+        boolean moveArmUp = gamepad2.dpad_up;
+        boolean moveArmDown = gamepad2.dpad_down;
 
         //Code to move arm
         if (moveArmUp && !moveArmDown) {
-            robot.towers.arm_move(robot.towers.liftMotor.getCurrentPosition() + robot.towers.motorTickPerMillimeter * 30);
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() + robot.towers.motorTickPerMillimeter * 30);
         } else if (moveArmDown && !moveArmUp) {
-            robot.towers.arm_move(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter* 30);
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter* 30);
         }
 
         //SERVO GRABBER CODE
         //Variable for grabber
-        boolean closeGrabber = gamepad2.dpad_up;
-        boolean openGrabber = gamepad2.dpad_down;
+        boolean closeGrabber = gamepad2.right_bumper;
+        boolean openGrabber = gamepad2.left_bumper;
         double grabberOpen = Grabber_911.GRABBER_OPEN;
         double grabberClose = Grabber_911.GRABBER_CLOSE;
 
