@@ -35,7 +35,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     boolean isSignalDetected = false;
     String levelPosition = "";
-    double targetLevel;
+    double targetZone;
 
     private static final String VUFORIA_KEY =
             "AbfoyYX/////AAABmb/61+6Y2U5Lr+ETwpWurGhmj+twGo3rVHrd61Dn3Gm9bQzp1GCXxWVz+LRj1iQ2pmB0bFiBTqUjXIKtubsE/xcdnG0/ZTHPZkO2jcWObwVsdMDkvP7eHw/VW+XsfyBn687dYVHantczOsr1MC46u8wmBncQXDeRwWSZjM1HjIiWaRPqcE6ksSwBLgZ3N/U+qsPonAkjcS1IHugS78zc4YTTfiVpNsxy8COx7jyCEXqVkIob0kgQXkXdqdfTn3n2Vd48vCKdvjE362R1ltxQzJ+eqzHdK4eIcBIPhIy/TPnu3UuHNmGU+gM/bawBSOM8ylYPhA1CHlutClEIbYK9LYNBjUPYYsG28+GbcPD6fsAH";
@@ -87,7 +87,7 @@ public abstract class AutoBase extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0 / 9.0);
+            tfod.setZoom(2, 16.0 / 9.0);
         }
     }
 
@@ -122,6 +122,23 @@ public abstract class AutoBase extends LinearOpMode {
                             telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                         }
+
+                        // check label to see if the camera now sees a Duck
+//                        if (recognition.getLabel().equals("1 Bolt") || recognition.getLabel().equals("2 Bulb") || recognition.getLabel().equals("3 Panel")) {
+//                            isSignalDetected = true;
+//                            telemetry.addData("Object Detected", "Signal");
+//                        }
+
+                        //Determine where the duck is based of the X-axis of the duck
+//                        if (recognition.getLeft() < 408) {
+//                            telemetry.addData("Arm Position", "1");
+//                            levelPosition = "Level one";
+//                            targetLevel = robot.arm.armPos1;
+//                        } else if (recognition.getLeft() > 408 && recognition.getLeft() < 500) {
+//                            telemetry.addData("Arm Position", "2");
+//                            levelPosition = "Level two";
+//                            targetLevel = robot.arm.armPos2;
+//                        }
                         telemetry.update();
                     }
                 }
