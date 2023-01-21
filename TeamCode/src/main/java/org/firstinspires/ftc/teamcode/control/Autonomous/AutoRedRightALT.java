@@ -4,11 +4,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "Auto Red Right", preselectTeleOp = "TeleOp_Iterative")
-public class AutoRedRight extends AutoBase {
+@Autonomous(name = "Auto Red Right ALT", preselectTeleOp = "TeleOp_Iterative")
+public class AutoRedRightALT extends AutoBase {
 
     @Override
     public void runOpMode() {
@@ -26,7 +27,7 @@ public class AutoRedRight extends AutoBase {
         Pose2d coneStack = new Pose2d(69.5-7.00, -12, Math.toRadians(0));
         Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(270));
         Pose2d signalZone2 = new Pose2d(35.25+2, -11.75, Math.toRadians(270));
-        Pose2d signalZone3 = new Pose2d(60, -11.75, Math.toRadians(270));
+        Pose2d signalZone3 = new Pose2d(58.75, -11.75, Math.toRadians(270));
         Vector2d vConeStack = new Vector2d(68.5-7.00, -11.75); // Isn't used so isn't updated
 
         // Potential alt auto cycle positions
@@ -103,8 +104,8 @@ public class AutoRedRight extends AutoBase {
         close_grabber();
         sleep(500);
         lift_towers(robot.towers.liftPos1);
-        rr_drive.followTrajectory(trajJunctionL2P1); // To try the alt path for this ad "Alt" to the trajectory
-        rr_drive.followTrajectory(trajJunctionL2P2); // To try the alt path for this ad "Alt" to the trajectory
+        rr_drive.followTrajectory(trajAltJunctionL2P1); // To try the alt path for this ad "Alt" to the trajectory
+        rr_drive.followTrajectory(trajAltJunctionL2P2); // To try the alt path for this ad "Alt" to the trajectory
         open_grabber();
         rr_drive.followTrajectory(trajSignalZone);
         lift_towers(robot.towers.liftPos0);

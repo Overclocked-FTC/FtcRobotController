@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
@@ -24,11 +25,11 @@ public class AutoBlueRight extends AutoBase {
         // Center to center distance of a tile: 23.5 in
         Pose2d startPose = new Pose2d(-40.000, 64.00, Math.toRadians(270));
         Pose2d junctionL5 = new Pose2d(-23.5-7.00, 47, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
-        Pose2d junctionL7 = new Pose2d(-49, 23-6.00, Math.toRadians(90));
-        Pose2d coneStack = new Pose2d(-69.5+7.00, 12, Math.toRadians(180));
-        Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
-        Pose2d signalZone2 = new Pose2d(-35.25-2, 11.75, Math.toRadians(180));
-        Pose2d signalZone3 = new Pose2d(58.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
+        Pose2d junctionL7 = new Pose2d(-48, 23-6.00, Math.toRadians(90));
+        Pose2d coneStack = new Pose2d(-69.5+7.00, 12-2, Math.toRadians(180));
+        Pose2d signalZone1 = new Pose2d(-11.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
+        Pose2d signalZone2 = new Pose2d(-35.25-2, 11.75, Math.toRadians(90));
+        Pose2d signalZone3 = new Pose2d(-58.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
         Vector2d vConeStack = new Vector2d(68.5-7.00, -11.75); // Isn't used so isn't updated
 
         rr_drive.setPoseEstimate(startPose);
@@ -39,6 +40,16 @@ public class AutoBlueRight extends AutoBase {
         // Code that finds which barcode the duck/shipping element is on
         detect_zone_pos();
 
+        // Set the target zone
+        Pose2d parkingZone = null;
+        if (targetZone == "Zone 1") {
+            parkingZone = signalZone1;
+        } else if (targetZone == "Zone 2") {
+            parkingZone = signalZone2;
+        } else if (targetZone == "Zone 3") {
+            parkingZone = signalZone3;
+        }
+
         // Build trajectories
         Trajectory trajJunctionL5 = rr_drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(junctionL5)
@@ -46,7 +57,7 @@ public class AutoBlueRight extends AutoBase {
 
         Trajectory trajConeStackP1 = rr_drive.trajectoryBuilder(trajJunctionL5.end(), true)
                 .lineToLinearHeading(signalZone2)
-                .addDisplacementMarker(2, () -> {
+                .addDisplacementMarker(4, () -> {
                     robot.towers.towers_lift(robot.towers.liftPosConeStack5);
                 })
                 .build();
@@ -56,15 +67,15 @@ public class AutoBlueRight extends AutoBase {
                 .build();
 
         Trajectory trajJunctionL7P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
-                .lineToLinearHeading(new Pose2d(-60, 11.75, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-58, 8.00, Math.toRadians(180)))
                 .build();
 
         Trajectory trajJunctionL7P2 = rr_drive.trajectoryBuilder(trajJunctionL7P1.end(), true)
-                .splineToLinearHeading(junctionL7, Math.toRadians(0))
+                .lineToLinearHeading(junctionL7) // For spline: , Math.toRadians(0)
                 .build();
 
         Trajectory trajSignalZone = rr_drive.trajectoryBuilder(trajJunctionL7P2.end(), true)
-                .lineTo(targetZone)
+                .lineToLinearHeading(parkingZone)
                 .build();
 
         // Wait for the game to begin

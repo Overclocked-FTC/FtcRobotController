@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
@@ -39,6 +40,16 @@ public class AutoBlueLeft extends AutoBase{
         // Code that finds which barcode the duck/shipping element is on
         detect_zone_pos();
 
+        // Set the target zone
+        Pose2d parkingZone = null;
+        if (targetZone == "Zone 1") {
+            parkingZone = signalZone1;
+        } else if (targetZone == "Zone 2") {
+            parkingZone = signalZone2;
+        } else if (targetZone == "Zone 3") {
+            parkingZone = signalZone3;
+        }
+
         // Build trajectories
         Trajectory trajJunctionL3 = rr_drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(junctionL3)
@@ -46,7 +57,7 @@ public class AutoBlueLeft extends AutoBase{
 
         Trajectory trajConeStackP1 = rr_drive.trajectoryBuilder(trajJunctionL3.end(), true)
                 .lineToLinearHeading(signalZone2)
-                .addDisplacementMarker(2, () -> {
+                .addDisplacementMarker(4, () -> {
                     robot.towers.towers_lift(robot.towers.liftPosConeStack5);
                 })
                 .build();
@@ -64,7 +75,7 @@ public class AutoBlueLeft extends AutoBase{
                 .build();
 
         Trajectory trajSignalZone = rr_drive.trajectoryBuilder(trajJunctionL1P2.end(), true)
-                .lineTo(targetZone)
+                .lineToLinearHeading(parkingZone)
                 .build();
 
         // Wait for the game to begin
