@@ -42,34 +42,47 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 /**
- * This 2020-2021 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the Freight Frenzy game elements.
+ * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
+ * determine which image is being presented to the robot.
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
+ *
+ * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
+ * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-    /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
-     * the following 4 detectable objects
-     *  0: Ball,
-     *  1: Cube,
-     *  2: Duck,
-     *  3: Marker (duck location tape marker)
-     *
-     *  Two additional model assets are available which only contain a subset of the objects:
-     *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-     *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+
+    /*
+     * Specify the source for the Tensor Flow Model.
+     * If the TensorFlowLite object model is included in the Robot Controller App as an "asset",
+     * the OpMode must to load it using loadModelFromAsset().  However, if a team generated model
+     * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
+     * Here we assume it's an Asset.    Also see method initTfod() below .
      */
+    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+
+
     private static final String[] LABELS = {
-      "Ball",
-      "Cube",
-      "Duck",
-      "Marker"
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
 
-    boolean isDuckDetected = false;
-    String levelPosition = "";
-
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
     private static final String VUFORIA_KEY =
             "AbfoyYX/////AAABmb/61+6Y2U5Lr+ETwpWurGhmj+twGo3rVHrd61Dn3Gm9bQzp1GCXxWVz+LRj1iQ2pmB0bFiBTqUjXIKtubsE/xcdnG0/ZTHPZkO2jcWObwVsdMDkvP7eHw/VW+XsfyBn687dYVHantczOsr1MC46u8wmBncQXDeRwWSZjM1HjIiWaRPqcE6ksSwBLgZ3N/U+qsPonAkjcS1IHugS78zc4YTTfiVpNsxy8COx7jyCEXqVkIob0kgQXkXdqdfTn3n2Vd48vCKdvjE362R1ltxQzJ+eqzHdK4eIcBIPhIy/TPnu3UuHNmGU+gM/bawBSOM8ylYPhA1CHlutClEIbYK9LYNBjUPYYsG28+GbcPD6fsAH";
 
@@ -101,11 +114,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+            // If your target is at distance greater than 50 cm (20") you can increase the magnification value
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2, 16.0/9.0);
+            tfod.setZoom(2.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -120,48 +133,26 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
+                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
-                      for (Recognition recognition : updatedRecognitions) {
-                          telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                          telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                  recognition.getLeft(), recognition.getTop());
-                          telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                  recognition.getRight(), recognition.getBottom());
-                          i++;
+                        // step through the list of recognitions and display image position/size information for each one
+                        // Note: "Image number" refers to the randomized image orientation/number
+                        for (Recognition recognition : updatedRecognitions) {
+                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                          // check label to see if the camera now sees a Duck
-                          if (recognition.getLabel().equals("Duck")) {
-                              isDuckDetected = true;
-                              telemetry.addData("Object Detected", "Duck");
-                          } else {
-                              isDuckDetected = false;
-                          }
-
-                          if (recognition.getLeft() < 317) {
-                              telemetry.addData("Arm Position", "1");
-                              levelPosition = "Level one";
-                          } else if (recognition.getLeft() > 317 && recognition.getLeft() < 477) {
-                              telemetry.addData("Arm Position", "2");
-                              levelPosition = "Level two";
-                          } else if (recognition.getLeft() > 477) {
-                              telemetry.addData("Arm Position", "3");
-                              levelPosition = "Level three";
-                          } else {
-                              telemetry.addData("Arm Position", "null");
-                              levelPosition = "Null";
-                          }
-                      }
-                      telemetry.update();
+                            telemetry.addData(""," ");
+                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                        }
+                        telemetry.update();
                     }
                 }
             }
         }
-        telemetry.addData("Yeet", levelPosition);
-        telemetry.update();
-        sleep(5000);
     }
 
     /**
@@ -178,8 +169,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
     /**
@@ -189,10 +178,14 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.6f;
-       tfodParameters.isModelTensorFlow2 = true;
-       tfodParameters.inputSize = 320;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfodParameters.minResultConfidence = 0.75f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 300;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
+        // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
+        // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }

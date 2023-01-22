@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
 import java.util.Objects;
@@ -22,9 +23,9 @@ import java.util.Objects;
  * Further fine tuning of MAX_ANG_VEL may be desired.
  */
 
-@Disabled
 @Config
 @Autonomous(group = "drive")
+@Disabled
 public class MaxAngularVeloTuner extends LinearOpMode {
     public static double RUNTIME = 4.0;
 
@@ -37,7 +38,7 @@ public class MaxAngularVeloTuner extends LinearOpMode {
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         telemetry.addLine("Your bot will turn at full speed for " + RUNTIME + " seconds.");
         telemetry.addLine("Please ensure you have enough space cleared.");
@@ -65,6 +66,8 @@ public class MaxAngularVeloTuner extends LinearOpMode {
 
         telemetry.addData("Max Angular Velocity (rad)", maxAngVelocity);
         telemetry.addData("Max Angular Velocity (deg)", Math.toDegrees(maxAngVelocity));
+        telemetry.addData("Max Recommended Angular Velocity (rad)", maxAngVelocity * 0.8);
+        telemetry.addData("Max Recommended Angular Velocity (deg)", Math.toDegrees(maxAngVelocity * 0.8));
         telemetry.update();
 
         while (!isStopRequested()) idle();

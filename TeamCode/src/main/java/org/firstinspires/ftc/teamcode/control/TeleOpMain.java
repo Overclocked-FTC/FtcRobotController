@@ -30,12 +30,8 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_3000;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_911;
 
 //import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
@@ -131,48 +127,48 @@ public class TeleOpMain extends OpMode {
         boolean setArmPos1 = gamepad2.b;
         boolean setArmPos2 = gamepad2.x;
         boolean setArmPos3 = gamepad2.y;
-        boolean setArmPosShare = gamepad2.right_stick_button;
+        boolean setArmPosTest = gamepad2.right_stick_button;
 
         //Code to move arm
         if (setArmPos0) {
-            robot.arm.arm_move(robot.arm.armPos0);
+            robot.towers.towers_lift(robot.towers.liftPos0);
         }
 
         if (setArmPos1) {
-            robot.arm.arm_move(robot.arm.armPos1);
+            robot.towers.towers_lift(robot.towers.liftPos1);
         }
 
         if (setArmPos2) {
-            robot.arm.arm_move(robot.arm.armPos2);
+            robot.towers.towers_lift(robot.towers.liftPos2);
         }
 
         if (setArmPos3) {
-            robot.arm.arm_move(robot.arm.armPos3);
+            robot.towers.towers_lift(robot.towers.liftPos3);
         }
 
-        if (setArmPosShare) {
-            robot.arm.arm_move(robot.arm.armPosShare);
+        if (setArmPosTest) {
+            robot.towers.towers_lift(robot.towers.liftPosTest);
         }
 
 
         //ARM CODE (without encoder)
         //Variables for arm
-        boolean moveArmUp = gamepad2.dpad_right;
-        boolean moveArmDown = gamepad2.dpad_left;
+        boolean moveArmUp = gamepad2.dpad_up;
+        boolean moveArmDown = gamepad2.dpad_down;
 
         //Code to move arm
         if (moveArmUp && !moveArmDown) {
-            robot.arm.arm_move(robot.arm.armMotor.getCurrentPosition() + robot.arm.motorDegree * robot.arm.wormGearRatio * 1);
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() + robot.towers.motorTickPerMillimeter * 30);
         } else if (moveArmDown && !moveArmUp) {
-            robot.arm.arm_move(robot.arm.armMotor.getCurrentPosition() - robot.arm.motorDegree * robot.arm.wormGearRatio * 1);
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter* 30);
         }
 
         //SERVO GRABBER CODE
         //Variable for grabber
-        boolean closeGrabber = gamepad2.dpad_up;
-        boolean openGrabber = gamepad2.dpad_down;
-        double grabberOpen = Grabber_3000.GRABBER_OPEN;
-        double grabberClose = Grabber_3000.GRABBER_CLOSE;
+        boolean closeGrabber = gamepad2.right_bumper;
+        boolean openGrabber = gamepad2.left_bumper;
+        double grabberOpen = Grabber_911.GRABBER_OPEN;
+        double grabberClose = Grabber_911.GRABBER_CLOSE;
 
         //Code to move servo for grabber
         if (closeGrabber && !openGrabber) {
@@ -181,40 +177,6 @@ public class TeleOpMain extends OpMode {
 
         if (openGrabber && !closeGrabber) {
             robot.claw.grabber.setPosition(grabberOpen);
-        }
-
-
-
-        //DUCK SPINNER CODE
-        //Variables for duck spinner
-        boolean spinBlue = gamepad2.right_bumper;
-        boolean spinRed = gamepad2.left_bumper;
-
-        //Code to move servo
-//        if (spinBlue) {
-//            robot.carousel.duckSpinner.setPower(1);
-//        } else if (spinRed){
-//            robot.carousel.duckSpinner.setPower(-1);
-//        } else {
-//            robot.carousel.duckSpinner.setPower(0);
-//        }
-
-        //DUCK SPINNER CODE NEW (WITH MOTOR)
-        //Variables for duck spinner
-        double blueSpin = gamepad2.right_trigger;
-        double blueSpinSpeed = blueSpin;
-        double redSpin = gamepad2.left_trigger;
-        double redSpinSpeed = -redSpin;
-
-        //Code to move motor
-        robot.carousel.spinnerDuck.setPower(blueSpinSpeed + redSpinSpeed);
-
-        if (spinBlue) {
-            robot.carousel.spinnerDuck.setPower(0.6);
-        } else if (spinRed){
-            robot.carousel.spinnerDuck.setPower(-0.6);
-        } else {
-            robot.carousel.spinnerDuck.setPower(0);
         }
     }
 

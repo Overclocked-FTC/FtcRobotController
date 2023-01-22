@@ -4,14 +4,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "Auto Red Left", preselectTeleOp = "TeleOp_Iterative")
-public class AutoRedLeft extends AutoBase{
-
-    // TODO: CURRENTLY SCUFFED
+@Autonomous(name = "Auto Red Right", preselectTeleOp = "TeleOp_Iterative")
+public class AutoRedRight extends AutoBase {
 
     @Override
     public void runOpMode() {
@@ -23,14 +20,18 @@ public class AutoRedLeft extends AutoBase{
         // Coordinates are taken from center of bot
         // Junction naming starts from top left (from audience pov) and moves left and down. example: L2
         // Center to center distance of a tile: 23.5 in
-        Pose2d startPose = new Pose2d(-40.000, -64.00, Math.toRadians(90));
-        Pose2d junctionL6 = new Pose2d(-23.5-7.00, -47, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
-        Pose2d junctionL8 = new Pose2d(-49, -23+6.00, Math.toRadians(270));
-        Pose2d coneStack = new Pose2d(-69.5+7.00, -12, Math.toRadians(180));
-        Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
-        Pose2d signalZone2 = new Pose2d(-35.25+2, -11.75, Math.toRadians(180));
-        Pose2d signalZone3 = new Pose2d(58.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
+        Pose2d startPose = new Pose2d(38.000, -63.00, Math.toRadians(90));
+        Pose2d junctionL4 = new Pose2d(23.5+7.00, -46, Math.toRadians(180)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
+        Pose2d junctionL2 = new Pose2d(49, -23+6.00, Math.toRadians(270));
+        Pose2d coneStack = new Pose2d(70.5-7.00, -11, Math.toRadians(0));
+        Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(270));
+        Pose2d signalZone2 = new Pose2d(35.25+2, -11.75, Math.toRadians(270));
+        Pose2d signalZone3 = new Pose2d(60, -11.75, Math.toRadians(270));
         Vector2d vConeStack = new Vector2d(68.5-7.00, -11.75); // Isn't used so isn't updated
+
+        // Potential alt auto cycle positions
+        Pose2d backupPose = new Pose2d(23, -11.75, Math.toRadians(0));
+        Pose2d altJunctionL2 = new Pose2d(49-5, -23+5, Math.toRadians(315));
 
         rr_drive.setPoseEstimate(startPose);
 
@@ -51,11 +52,11 @@ public class AutoRedLeft extends AutoBase{
         }
 
         // Build trajectories
-        Trajectory trajJunctionL6 = rr_drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(junctionL6)
+        Trajectory trajJunctionL4 = rr_drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(junctionL4)
                 .build();
 
-        Trajectory trajConeStackP1 = rr_drive.trajectoryBuilder(trajJunctionL6.end(), true)
+        Trajectory trajConeStackP1 = rr_drive.trajectoryBuilder(trajJunctionL4.end(), true)
                 .lineToLinearHeading(signalZone2)
                 .addDisplacementMarker(4, () -> {
                     robot.towers.towers_lift(robot.towers.liftPosConeStack5);
@@ -66,16 +67,25 @@ public class AutoRedLeft extends AutoBase{
                 .lineToLinearHeading(coneStack)
                 .build();
 
-        Trajectory trajJunctionL8P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
-                .lineToLinearHeading(new Pose2d(-60, -11.75, Math.toRadians(0)))
+        Trajectory trajJunctionL2P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
+                .lineToLinearHeading(new Pose2d(60, -12.00, Math.toRadians(0)))
                 .build();
 
-        Trajectory trajJunctionL8P2 = rr_drive.trajectoryBuilder(trajJunctionL8P1.end(), true)
-                .splineToLinearHeading(junctionL8, Math.toRadians(0))
+        Trajectory trajJunctionL2P2 = rr_drive.trajectoryBuilder(trajJunctionL2P1.end(), true)
+                .splineToLinearHeading(junctionL2, Math.toRadians(0))
                 .build();
 
-        Trajectory trajSignalZone = rr_drive.trajectoryBuilder(trajJunctionL8P2.end(), true)
+        Trajectory trajSignalZone = rr_drive.trajectoryBuilder(trajJunctionL2P2.end(), true)
                 .lineToLinearHeading(parkingZone)
+                .build();
+
+        // Potential alt auto cycle trajectories
+        Trajectory trajAltJunctionL2P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
+                .lineToLinearHeading(backupPose)
+                .build();
+
+        Trajectory trajAltJunctionL2P2 = rr_drive.trajectoryBuilder(trajAltJunctionL2P1.end(), true)
+                .lineToLinearHeading(altJunctionL2)
                 .build();
 
         // Wait for the game to begin
@@ -85,7 +95,7 @@ public class AutoRedLeft extends AutoBase{
         // Code that makes the robot move
         // Scores pre-loaded cone, picks up one more cone, scores second cone, parks
         lift_towers(robot.towers.liftPos1);
-        rr_drive.followTrajectory(trajJunctionL6);
+        rr_drive.followTrajectory(trajJunctionL4);
         open_grabber();
         sleep(500);
         rr_drive.followTrajectory(trajConeStackP1);
@@ -93,8 +103,8 @@ public class AutoRedLeft extends AutoBase{
         close_grabber();
         sleep(500);
         lift_towers(robot.towers.liftPos1);
-        rr_drive.followTrajectory(trajJunctionL8P1);
-        rr_drive.followTrajectory(trajJunctionL8P2);
+        rr_drive.followTrajectory(trajJunctionL2P1); // To try the alt path for this ad "Alt" to the trajectory
+        rr_drive.followTrajectory(trajJunctionL2P2); // To try the alt path for this ad "Alt" to the trajectory
         open_grabber();
         rr_drive.followTrajectory(trajSignalZone);
         lift_towers(robot.towers.liftPos0);
