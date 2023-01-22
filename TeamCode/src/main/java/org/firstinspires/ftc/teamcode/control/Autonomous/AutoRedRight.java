@@ -20,10 +20,10 @@ public class AutoRedRight extends AutoBase {
         // Coordinates are taken from center of bot
         // Junction naming starts from top left (from audience pov) and moves left and down. example: L2
         // Center to center distance of a tile: 23.5 in
-        Pose2d startPose = new Pose2d(40.000, -64.00, Math.toRadians(90));
-        Pose2d junctionL4 = new Pose2d(23.5+7.00, -47, Math.toRadians(180)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
+        Pose2d startPose = new Pose2d(38.000, -63.00, Math.toRadians(90));
+        Pose2d junctionL4 = new Pose2d(23.5+7.00, -46, Math.toRadians(180)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
         Pose2d junctionL2 = new Pose2d(49, -23+6.00, Math.toRadians(270));
-        Pose2d coneStack = new Pose2d(69.5-7.00, -12, Math.toRadians(0));
+        Pose2d coneStack = new Pose2d(70.5-7.00, -11, Math.toRadians(0));
         Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(270));
         Pose2d signalZone2 = new Pose2d(35.25+2, -11.75, Math.toRadians(270));
         Pose2d signalZone3 = new Pose2d(60, -11.75, Math.toRadians(270));
@@ -68,7 +68,7 @@ public class AutoRedRight extends AutoBase {
                 .build();
 
         Trajectory trajJunctionL2P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
-                .lineToLinearHeading(new Pose2d(60, -11.75, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(60, -12.00, Math.toRadians(0)))
                 .build();
 
         Trajectory trajJunctionL2P2 = rr_drive.trajectoryBuilder(trajJunctionL2P1.end(), true)

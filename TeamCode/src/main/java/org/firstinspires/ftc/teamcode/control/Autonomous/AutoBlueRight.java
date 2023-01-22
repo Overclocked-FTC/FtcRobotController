@@ -23,10 +23,10 @@ public class AutoBlueRight extends AutoBase {
         // Coordinates are taken from center of bot
         // Junction naming starts from top left (from audience pov) and moves left and down. example: L2
         // Center to center distance of a tile: 23.5 in
-        Pose2d startPose = new Pose2d(-40.000, 64.00, Math.toRadians(270));
-        Pose2d junctionL5 = new Pose2d(-23.5-7.00, 47, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
+        Pose2d startPose = new Pose2d(-38.000, 64.00, Math.toRadians(270));
+        Pose2d junctionL5 = new Pose2d(-23.5-7.00, 47.5, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
         Pose2d junctionL7 = new Pose2d(-48, 23-6.00, Math.toRadians(90));
-        Pose2d coneStack = new Pose2d(-69.5+7.00, 12-2, Math.toRadians(180));
+        Pose2d coneStack = new Pose2d(-72.00+6.00, 12-1, Math.toRadians(180));
         Pose2d signalZone1 = new Pose2d(-11.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
         Pose2d signalZone2 = new Pose2d(-35.25-2, 11.75, Math.toRadians(90));
         Pose2d signalZone3 = new Pose2d(-58.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
