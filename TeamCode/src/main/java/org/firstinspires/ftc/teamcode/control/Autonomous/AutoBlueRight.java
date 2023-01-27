@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
@@ -35,10 +34,10 @@ public class AutoBlueRight extends AutoBase {
         rr_drive.setPoseEstimate(startPose);
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        init_detection();
 
         // Code that finds which barcode the duck/shipping element is on
-        detect_zone_pos();
+        detect_april_tag();
 
         // Set the target zone
         Pose2d parkingZone = null;

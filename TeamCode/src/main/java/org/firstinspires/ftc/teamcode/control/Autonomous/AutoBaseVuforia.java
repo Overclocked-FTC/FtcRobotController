@@ -1,58 +1,23 @@
-/* Copyright (c) 2019 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+package org.firstinspires.ftc.teamcode.control.Autonomous;
 
-package org.firstinspires.ftc.teamcode.control;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.control.Provider;
+import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_911;
 
 import java.util.List;
 
-/**
- * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine which image is being presented to the robot.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below.
- */
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+public abstract class AutoBaseVuforia extends LinearOpMode {
+    // Declare OpMode members.
+    Provider robot = new Provider();
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -64,25 +29,23 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
-
     private static final String[] LABELS = {
             "1 Bolt",
             "2 Bulb",
             "3 Panel"
     };
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https:// developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
+    // Vectors
+    Vector2d vSignalZone1 = new Vector2d(11.75, -11.75);
+    Vector2d vSignalZone2 = new Vector2d(35.25, -11.75);
+    Vector2d vSignalZone3 = new Vector2d(58.75, -11.75);
+
+    // Variables
+    boolean isSignalDetected = false;
+    String signalZone = "";
+//    Vector2d targetZone = vSignalZone3;
+    String targetZone = "Zone 3";
+
     private static final String VUFORIA_KEY =
             "AbfoyYX/////AAABmb/61+6Y2U5Lr+ETwpWurGhmj+twGo3rVHrd61Dn3Gm9bQzp1GCXxWVz+LRj1iQ2pmB0bFiBTqUjXIKtubsE/xcdnG0/ZTHPZkO2jcWObwVsdMDkvP7eHw/VW+XsfyBn687dYVHantczOsr1MC46u8wmBncQXDeRwWSZjM1HjIiWaRPqcE6ksSwBLgZ3N/U+qsPonAkjcS1IHugS78zc4YTTfiVpNsxy8COx7jyCEXqVkIob0kgQXkXdqdfTn3n2Vd48vCKdvjE362R1ltxQzJ+eqzHdK4eIcBIPhIy/TPnu3UuHNmGU+gM/bawBSOM8ylYPhA1CHlutClEIbYK9LYNBjUPYYsG28+GbcPD6fsAH";
 
@@ -98,8 +61,23 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      */
     private TFObjectDetector tfod;
 
-    @Override
-    public void runOpMode() {
+    // Methods
+    // Initialization method
+    public void auto_init() {
+        // Initialize the robot
+        robot.init(hardwareMap);
+
+        // Initialize encoders
+        robot.towers.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Initialize lift motor encoder
+
+        // Initialize servos
+        robot.claw.grabber.setPosition(Grabber_911.GRABBER_CLOSE);
+
+        // Tell that everything has been initialized
+        telemetry.addData("Status", "Waiting for camera");
+        telemetry.update();
+
+        // Initialize Tensor Flow
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -118,16 +96,21 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.0, 16.0/9.0);
+            tfod.setZoom(2, 16.0 / 9.0);
         }
+    }
 
-        /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
+    // TODO: Add camera detection stuff
 
+    // Camera detection method
+    public void detect_zone_pos() {
+        // Code that finds which barcode the duck/shipping element is on
+        robot.runtime.reset();
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            while (opModeIsActive() && !isSignalDetected) {
+                telemetry.addData("Time", "%2.5f S Elapsed", robot.runtime.seconds());
+                telemetry.update();
+
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -138,19 +121,50 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
                         for (Recognition recognition : updatedRecognitions) {
-                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
-                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
+                            double col = (recognition.getLeft() + recognition.getRight()) / 2;
+                            double row = (recognition.getTop() + recognition.getBottom()) / 2;
+                            double width = Math.abs(recognition.getRight() - recognition.getLeft());
+                            double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
-                            telemetry.addData(""," ");
-                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
-                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
-                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                            telemetry.addData("", " ");
+                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                            telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
+                            telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+
+
+                            // check label to see if the camera now sees a Duck
+                            if (recognition.getLabel().equals("1 Bolt") || recognition.getLabel().equals("2 Bulb") || recognition.getLabel().equals("3 Panel")) {
+                                isSignalDetected = true;
+                                telemetry.addData("Object Detected", "Signal");
+                            }
+
+
+                            // Determine which signal image is showing
+                            if (recognition.getLabel().equals("1 Bolt")) {
+                                telemetry.addData("Signal Zone", "1");
+                                signalZone = "Signal zone one";
+                                targetZone = "Zone 1";
+                            } else if (recognition.getLabel().equals("2 Bulb")) {
+                                telemetry.addData("Signal Zone", "2");
+                                signalZone = "Signal zone two";
+                                targetZone = "Zone 2";
+                            } else if (recognition.getLabel().equals("3 Panel")) {
+                                telemetry.addData("Signal Zone", "3");
+                                signalZone = "Signal zone three";
+                                targetZone = "Zone 3";
+                            }
                         }
                         telemetry.update();
                     }
                 }
+                if (robot.runtime.seconds() > 2) {
+                    isSignalDetected = true;
+                    telemetry.addData("Signal Zone", "3");
+                    signalZone = "Signal zone three (3)";
+                    targetZone = "Zone 3";
+                }
+                telemetry.addData("Yeet", signalZone);
+                telemetry.update();
             }
         }
     }
@@ -176,7 +190,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
@@ -188,4 +202,28 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
+
+    // Drive methods
+    // Manipulation methods
+    public void lift_towers(double position) {
+        robot.towers.towers_lift(position);
+        while (opModeIsActive() && robot.towers.liftMotor.isBusy()) {
+            telemetry.addData("Action", "Lifting towers");
+            telemetry.update();
+        }
+//        robot.towers.liftMotor.setPower(0);
+    }
+
+    public void open_grabber() {
+        robot.claw.grabber.setPosition(Grabber_911.GRABBER_OPEN);
+        telemetry.addData("Action", "opened grabber");
+        telemetry.update();
+    }
+
+    public void close_grabber() {
+        robot.claw.grabber.setPosition(Grabber_911.GRABBER_CLOSE);
+        telemetry.addData("Action", "closed grabber");
+        telemetry.update();
+    }
 }
+

@@ -41,7 +41,7 @@ public class LoggingUtil {
             if (logFiles.size() == 0) break;
             File fileToRemove = logFiles.remove(0);
             dirSize -= fileToRemove.length();
-            //noinspection ResultOfMethodCallIgnored
+            // noinspection ResultOfMethodCallIgnored
             fileToRemove.delete();
         }
     }
@@ -50,7 +50,7 @@ public class LoggingUtil {
      * Obtain a log file with the provided name
      */
     public static File getLogFile(String name) {
-        //noinspection ResultOfMethodCallIgnored
+        // noinspection ResultOfMethodCallIgnored
         ROAD_RUNNER_FOLDER.mkdirs();
 
         pruneLogsIfNecessary();

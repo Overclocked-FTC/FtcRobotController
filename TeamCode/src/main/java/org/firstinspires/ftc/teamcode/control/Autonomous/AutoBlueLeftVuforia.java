@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "Auto Blue Left", preselectTeleOp = "TeleOp_Iterative")
-public class AutoBlueLeft extends AutoBase {
+@Autonomous(name = "Auto Blue Left Vuforia", preselectTeleOp = "TeleOp_Iterative")
+public class AutoBlueLeftVuforia extends AutoBaseVuforia {
 
     // TODO: CURRENTLY SCUFFED
 
@@ -34,10 +34,10 @@ public class AutoBlueLeft extends AutoBase {
         rr_drive.setPoseEstimate(startPose);
 
         // Wait for the game to start (driver presses PLAY)
-        init_detection();
+        waitForStart();
 
         // Code that finds which barcode the duck/shipping element is on
-        detect_april_tag();
+        detect_zone_pos();
 
         // Set the target zone
         Pose2d parkingZone = null;

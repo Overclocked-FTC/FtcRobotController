@@ -36,10 +36,10 @@ public class AutoRedRight extends AutoBase {
         rr_drive.setPoseEstimate(startPose);
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        init_detection();
 
         // Code that finds which barcode the duck/shipping element is on
-        detect_zone_pos();
+        detect_april_tag();
 
         // Set the target zone
         Pose2d parkingZone = null;
@@ -110,6 +110,6 @@ public class AutoRedRight extends AutoBase {
         lift_towers(robot.towers.liftPos0);
 
         // Done with Autonomous
-        sleep(2000);
+        sleep(5000);
     }
 }

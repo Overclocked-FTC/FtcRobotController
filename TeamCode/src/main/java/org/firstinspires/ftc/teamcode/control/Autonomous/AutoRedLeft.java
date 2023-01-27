@@ -4,12 +4,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
 @Autonomous(name = "Auto Red Left", preselectTeleOp = "TeleOp_Iterative")
-public class AutoRedLeft extends AutoBase{
+public class AutoRedLeft extends AutoBase {
 
     // TODO: CURRENTLY SCUFFED
 
@@ -27,18 +26,18 @@ public class AutoRedLeft extends AutoBase{
         Pose2d junctionL6 = new Pose2d(-23.5-7.00, -47, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
         Pose2d junctionL8 = new Pose2d(-49, -23+6.00, Math.toRadians(270));
         Pose2d coneStack = new Pose2d(-69.5+7.00, -12, Math.toRadians(180));
-        Pose2d signalZone1 = new Pose2d(11.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
-        Pose2d signalZone2 = new Pose2d(-35.25+2, -11.75, Math.toRadians(180));
-        Pose2d signalZone3 = new Pose2d(58.75, -11.75, Math.toRadians(0)); // Isn't used so isn't updated
-        Vector2d vConeStack = new Vector2d(68.5-7.00, -11.75); // Isn't used so isn't updated
+        Pose2d signalZone1 = new Pose2d(-11.75, -11.75, Math.toRadians(270));
+        Pose2d signalZone2 = new Pose2d(-35.25+2, -11.75, Math.toRadians(270));
+        Pose2d signalZone3 = new Pose2d(-58.75, -11.75, Math.toRadians(270));
+        Vector2d vConeStack = new Vector2d(-68.5+7.00, -11.75);
 
         rr_drive.setPoseEstimate(startPose);
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        init_detection();
 
         // Code that finds which barcode the duck/shipping element is on
-        detect_zone_pos();
+        detect_april_tag();
 
         // Set the target zone
         Pose2d parkingZone = null;
@@ -67,7 +66,7 @@ public class AutoRedLeft extends AutoBase{
                 .build();
 
         Trajectory trajJunctionL8P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
-                .lineToLinearHeading(new Pose2d(-60, -11.75, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-60, -11.75, Math.toRadians(180)))
                 .build();
 
         Trajectory trajJunctionL8P2 = rr_drive.trajectoryBuilder(trajJunctionL8P1.end(), true)

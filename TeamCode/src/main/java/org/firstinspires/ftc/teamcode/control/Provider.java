@@ -14,19 +14,19 @@ public class Provider {
     It hardware maps the hardware to the software and sets all the basic information for each piece.
     */
 
-    //Hardware Components
+    // Hardware Components
     public Twin_Towers towers = new Twin_Towers();
     public Grabber_911 claw = new Grabber_911();
     public Drive_Mecanum drive = new Drive_Mecanum();
 
-    //local OpMode members
+    // local OpMode members
     public ElapsedTime runtime  = new ElapsedTime();
 
-    //Constructor
+    // Constructor
     public Provider(){
     }
 
-    //Initialize standard Hardware interfaces
+    // Initialize standard Hardware interfaces
     public void init(HardwareMap hwMap) {
         towers.init(hwMap);
         claw.init(hwMap);
