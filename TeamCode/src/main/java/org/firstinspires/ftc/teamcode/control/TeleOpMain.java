@@ -108,7 +108,7 @@ public class TeleOpMain extends OpMode {
         robot.drive.driveRB.setPower(rightBackPower);
 
         // Go Slow/Fast code
-        boolean slowMoButton = gamepad1.y;
+        boolean slowMoButton = gamepad1.right_bumper;
 
         if (slowMoButton && !changed) {
             if (robot.drive.slowMo == 1) {
@@ -159,8 +159,8 @@ public class TeleOpMain extends OpMode {
         // Code to move arm
         if (moveArmUp && !moveArmDown) {
             robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() + robot.towers.motorTickPerMillimeter * 30);
-        } else if (moveArmDown && !moveArmUp) {
-            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter* 30);
+        } else if (moveArmDown && !moveArmUp && robot.towers.liftMotor.getCurrentPosition() > 0) {
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter * 30);
         }
 
         // SERVO GRABBER CODE

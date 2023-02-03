@@ -19,9 +19,9 @@ public class Twin_Towers {
     public double pulleyCircumference = 112; // Circumference in mm of pulley
     public double motorTickPerMillimeter = MOTOR_TICK_COUNT / pulleyCircumference;
     public double liftPos0 = 0; // Arm is down all the way
-    public double liftPos1 = motorTickPerMillimeter * 343; // Last number is height in millimeters. Low Junction
-    public double liftPos2 = motorTickPerMillimeter * 550; // Medium Junction
-    public double liftPos3 = motorTickPerMillimeter * 850; // High Junction
+    public double liftPos1 = motorTickPerMillimeter * 360 ; // Last number is height in millimeters. Low Junction
+    public double liftPos2 = motorTickPerMillimeter * 600; // Medium Junction
+    public double liftPos3 = motorTickPerMillimeter * 840; // High Junction
     public double liftPosConeStack2 = motorTickPerMillimeter * 30; // Lifts to the 2nd cone in the cone stack
     public double liftPosConeStack3 = motorTickPerMillimeter * 60; // Lifts to the 3rd cone in the cone stack
     public double liftPosConeStack4 = motorTickPerMillimeter * 95; // Lifts to the 4th cone in the cone stack
