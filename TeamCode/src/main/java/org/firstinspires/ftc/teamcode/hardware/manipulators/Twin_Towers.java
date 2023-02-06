@@ -15,7 +15,7 @@ public class Twin_Towers {
     // Variables
     static final double MOTOR_TICK_COUNT = 537.7;
 //    public double motorDegree = MOTOR_TICK_COUNT / 360;
-//    public double GearRatio = 1;
+    public double GearRatio = 1;
     public double pulleyCircumference = 112; // Circumference in mm of pulley
     public double motorTickPerMillimeter = MOTOR_TICK_COUNT / pulleyCircumference;
     public double liftPos0 = 0; // Arm is down all the way
@@ -24,7 +24,7 @@ public class Twin_Towers {
     public double liftPos3 = motorTickPerMillimeter * 840; // High Junction
     public double liftPosConeStack2 = motorTickPerMillimeter * 30; // Lifts to the 2nd cone in the cone stack
     public double liftPosConeStack3 = motorTickPerMillimeter * 60; // Lifts to the 3rd cone in the cone stack
-    public double liftPosConeStack4 = motorTickPerMillimeter * 95; // Lifts to the 4th cone in the cone stack
+    public double liftPosConeStack4 = motorTickPerMillimeter * 85; // Lifts to the 4th cone in the cone stack
     public double liftPosConeStack5 = motorTickPerMillimeter * 125; // Lifts to the 5th cone in the cone stack
     public double liftPosTest = motorTickPerMillimeter * 100;
 
