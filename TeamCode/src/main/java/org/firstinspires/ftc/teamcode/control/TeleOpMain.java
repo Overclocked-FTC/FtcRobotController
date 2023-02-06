@@ -33,49 +33,49 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.manipulators.Grabber_911;
 
-//import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
+// import org.firstinspires.ftc.teamcode.hardware.manipulators.Arm;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp_Iterative", group="Iterative Opmode")
 
 public class TeleOpMain extends OpMode {
 
-    //Declare OpMode members
+    // Declare OpMode members
     Provider robot = new Provider();
 
-    //Class variables
+    // Class variables
     boolean changed = false;
 
-    //Code to run once when the driver hits INIT
+    // Code to run once when the driver hits INIT
     @Override
     public void init() {
-        //Initialize the robot
+        // Initialize the robot
         robot.init(hardwareMap);
 
-        //Tell the driver that initialization is complete
+        // Tell the driver that initialization is complete
         telemetry.addData("Status", "Initialized");
     }
 
-    //Code to run repeatedly after the driver hits INIT, but before they hit PLAY
+    // Code to run repeatedly after the driver hits INIT, but before they hit PLAY
     @Override
     public void init_loop() {
 
     }
 
-    //Code to run once when the driver hits PLAY
+    // Code to run once when the driver hits PLAY
     @Override
     public void start() {
-        //Resets the runtime value to 0
+        // Resets the runtime value to 0
         robot.runtime.reset();
     }
 
-    //Code to run repeatedly after the driver hits PLAY but before they hit STOP
+    // Code to run repeatedly after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
-        //Show the elapsed game time and wheel power
+        // Show the elapsed game time and wheel power
         telemetry.addData("Status", "Run Time: " + robot.runtime.toString());
 
-        //DRIVE CODE
-        //This uses basic math to combine motions and is easier to drive straight
+        // DRIVE CODE
+        // This uses basic math to combine motions and is easier to drive straight
         double max;
         double drive  = -gamepad1.left_stick_y / 1.2 / robot.drive.slowMo;
         double strafe =  gamepad1.left_stick_x / 1.2 / robot.drive.slowMo;
@@ -101,14 +101,14 @@ public class TeleOpMain extends OpMode {
             rightBackPower  /= max;
         }
 
-        //Send calculated power to wheels
+        // Send calculated power to wheels
         robot.drive.driveLF.setPower(leftFrontPower);
         robot.drive.driveRF.setPower(rightFrontPower);
         robot.drive.driveLB.setPower(leftBackPower);
         robot.drive.driveRB.setPower(rightBackPower);
 
-        //Go Slow/Fast code
-        boolean slowMoButton = gamepad1.y;
+        // Go Slow/Fast code
+        boolean slowMoButton = gamepad1.right_bumper;
 
         if (slowMoButton && !changed) {
             if (robot.drive.slowMo == 1) {
@@ -121,15 +121,15 @@ public class TeleOpMain extends OpMode {
             changed = false;
         }
 
-        //ARM CODE (with encoder)
-        //Variables for arm
+        // ARM CODE (with encoder)
+        // Variables for arm
         boolean setArmPos0 = gamepad2.a;
         boolean setArmPos1 = gamepad2.b;
         boolean setArmPos2 = gamepad2.x;
         boolean setArmPos3 = gamepad2.y;
         boolean setArmPosTest = gamepad2.right_stick_button;
 
-        //Code to move arm
+        // Code to move arm
         if (setArmPos0) {
             robot.towers.towers_lift(robot.towers.liftPos0);
         }
@@ -151,26 +151,26 @@ public class TeleOpMain extends OpMode {
         }
 
 
-        //ARM CODE (without encoder)
-        //Variables for arm
+        // ARM CODE (without encoder)
+        // Variables for arm
         boolean moveArmUp = gamepad2.dpad_up;
         boolean moveArmDown = gamepad2.dpad_down;
 
-        //Code to move arm
+        // Code to move arm
         if (moveArmUp && !moveArmDown) {
             robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() + robot.towers.motorTickPerMillimeter * 30);
-        } else if (moveArmDown && !moveArmUp) {
-            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter* 30);
+        } else if (moveArmDown && !moveArmUp && robot.towers.liftMotor.getCurrentPosition() > 0) {
+            robot.towers.towers_lift(robot.towers.liftMotor.getCurrentPosition() - robot.towers.motorTickPerMillimeter * 30);
         }
 
-        //SERVO GRABBER CODE
-        //Variable for grabber
+        // SERVO GRABBER CODE
+        // Variable for grabber
         boolean closeGrabber = gamepad2.right_bumper;
         boolean openGrabber = gamepad2.left_bumper;
         double grabberOpen = Grabber_911.GRABBER_OPEN;
         double grabberClose = Grabber_911.GRABBER_CLOSE;
 
-        //Code to move servo for grabber
+        // Code to move servo for grabber
         if (closeGrabber && !openGrabber) {
             robot.claw.grabber.setPosition(grabberClose);
         }
@@ -180,10 +180,10 @@ public class TeleOpMain extends OpMode {
         }
     }
 
-    //Code to run once after the driver hits STOP
+    // Code to run once after the driver hits STOP
     @Override
     public void stop() {
-        //Just cause
+        // Just cause
         telemetry.addData("BOT Status", "I AM A BOT!");
     }
 }

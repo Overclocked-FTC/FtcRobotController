@@ -22,8 +22,8 @@ public class BNO055IMUUtil {
      * Call after {@link BNO055IMU#initialize(BNO055IMU.Parameters)}. Although this isn't
      * mentioned in the datasheet, the axes order appears to affect the onboard sensor fusion.
      *
-     * Adapted from <a href="https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically?p=56587#post56587">this post</a>.
-     * Reference the <a href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf">BNO055 Datasheet</a> for details.
+     * Adapted from <a href="https:// ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically?p=56587#post56587">this post</a>.
+     * Reference the <a href="https:// www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf">BNO055 Datasheet</a> for details.
      *
      * NOTE: Remapping axes can be somewhat confusing. Instead, use {@link #remapZAxis}, if appropriate.
      *

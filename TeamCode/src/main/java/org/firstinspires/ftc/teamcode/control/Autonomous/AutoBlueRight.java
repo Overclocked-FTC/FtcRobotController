@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.control.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
-@Autonomous(name = "Auto Blue Right", preselectTeleOp = "TeleOp_Iterative")
+@Autonomous(name = "Auto BLUE Right", preselectTeleOp = "TeleOp_Iterative")
 public class AutoBlueRight extends AutoBase {
-
-    // TODO: CURRENTLY SCUFFED
 
     @Override
     public void runOpMode() {
@@ -26,19 +22,55 @@ public class AutoBlueRight extends AutoBase {
         Pose2d startPose = new Pose2d(-38.000, 64.00, Math.toRadians(270));
         Pose2d junctionL5 = new Pose2d(-23.5-7.00, 47.5, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
         Pose2d junctionL7 = new Pose2d(-48, 23-6.00, Math.toRadians(90));
-        Pose2d coneStack = new Pose2d(-72.00+6.00, 12-1, Math.toRadians(180));
-        Pose2d signalZone1 = new Pose2d(-11.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
+        Pose2d junctionM3 = new Pose2d(-23-8.00, 22, Math.toRadians(0));
+        Pose2d junctionM3V2 = new Pose2d(-23-5.20, 23.50-4.00, Math.toRadians(45));
+        Pose2d coneStack = new Pose2d(-70.00+7.00, 12.50, Math.toRadians(180));
+        Pose2d coneStackC2 = new Pose2d(-70.00+7.00, 13.50, Math.toRadians(180));
+        Pose2d signalZone1 = new Pose2d(-11.75, 11.75, Math.toRadians(90));
         Pose2d signalZone2 = new Pose2d(-35.25-2, 11.75, Math.toRadians(90));
-        Pose2d signalZone3 = new Pose2d(-58.75, 11.75, Math.toRadians(90)); // Isn't used so isn't updated
-        Vector2d vConeStack = new Vector2d(68.5-7.00, -11.75); // Isn't used so isn't updated
+        Pose2d signalZone3 = new Pose2d(-63.00, 12.50, Math.toRadians(90));
 
         rr_drive.setPoseEstimate(startPose);
 
+        // Build trajectories
+        Trajectory trajJunctionM3 = rr_drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(junctionM3)
+                .addDisplacementMarker(0, () -> {
+                    robot.towers.towers_lift(robot.towers.liftPos2);
+                })
+                .build();
+
+        Trajectory trajConeStack5P1 = rr_drive.trajectoryBuilder(junctionM3)
+                .lineToLinearHeading(signalZone2)
+                .addDisplacementMarker(4, () -> {
+                    robot.towers.towers_lift(robot.towers.liftPosConeStack5);
+                })
+                .build();
+
+        Trajectory trajConeStack5P2 = rr_drive.trajectoryBuilder(signalZone2)
+                .lineToLinearHeading(coneStack)
+                .build();
+
+        Trajectory trajConeStack4 = rr_drive.trajectoryBuilder(junctionM3V2)
+                .lineToLinearHeading(coneStackC2)
+                .addDisplacementMarker(4, () -> {
+                    robot.towers.towers_lift(robot.towers.liftPosConeStack4);
+                })
+                .build();
+
+        Trajectory trajJunctionM3FromStack = rr_drive.trajectoryBuilder(coneStack)
+                .lineToLinearHeading(junctionM3V2)
+                .build();
+
+        Trajectory trajJunctionM3C2FromStack = rr_drive.trajectoryBuilder(coneStackC2)
+                .lineToLinearHeading(junctionM3V2)
+                .build();
+
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        init_detection();
 
         // Code that finds which barcode the duck/shipping element is on
-        detect_zone_pos();
+        detect_april_tag();
 
         // Set the target zone
         Pose2d parkingZone = null;
@@ -50,31 +82,9 @@ public class AutoBlueRight extends AutoBase {
             parkingZone = signalZone3;
         }
 
-        // Build trajectories
-        Trajectory trajJunctionL5 = rr_drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(junctionL5)
-                .build();
-
-        Trajectory trajConeStackP1 = rr_drive.trajectoryBuilder(trajJunctionL5.end(), true)
-                .lineToLinearHeading(signalZone2)
-                .addDisplacementMarker(4, () -> {
-                    robot.towers.towers_lift(robot.towers.liftPosConeStack5);
-                })
-                .build();
-
-        Trajectory trajConeStackP2 = rr_drive.trajectoryBuilder(trajConeStackP1.end(), true)
-                .lineToLinearHeading(coneStack)
-                .build();
-
-        Trajectory trajJunctionL7P1 = rr_drive.trajectoryBuilder(trajConeStackP2.end(), true)
-                .lineToLinearHeading(new Pose2d(-58, 8.00, Math.toRadians(180)))
-                .build();
-
-        Trajectory trajJunctionL7P2 = rr_drive.trajectoryBuilder(trajJunctionL7P1.end(), true)
-                .lineToLinearHeading(junctionL7) // For spline: , Math.toRadians(0)
-                .build();
-
-        Trajectory trajSignalZone = rr_drive.trajectoryBuilder(trajJunctionL7P2.end(), true)
+        // Build the last trajectory
+        // This trajectory has to be built after the play button has been pressed
+        Trajectory trajSignalZone = rr_drive.trajectoryBuilder(junctionM3V2)
                 .lineToLinearHeading(parkingZone)
                 .build();
 
@@ -84,18 +94,29 @@ public class AutoBlueRight extends AutoBase {
 
         // Code that makes the robot move
         // Scores pre-loaded cone, picks up one more cone, scores second cone, parks
-        lift_towers(robot.towers.liftPos1);
-        rr_drive.followTrajectory(trajJunctionL5);
+        // Cycle pre-load
+        rr_drive.followTrajectory(trajJunctionM3);
         open_grabber();
         sleep(500);
-        rr_drive.followTrajectory(trajConeStackP1);
-        rr_drive.followTrajectory(trajConeStackP2);
+        // Begin cycle 1
+        rr_drive.followTrajectory(trajConeStack5P1);
+        rr_drive.followTrajectory(trajConeStack5P2);
         close_grabber();
         sleep(500);
-        lift_towers(robot.towers.liftPos1);
-        rr_drive.followTrajectory(trajJunctionL7P1);
-        rr_drive.followTrajectory(trajJunctionL7P2);
+        lift_towers(robot.towers.liftPos2);
+        rr_drive.followTrajectory(trajJunctionM3FromStack);
         open_grabber();
+        sleep(500);
+        // Begin cycle 2
+        rr_drive.followTrajectory(trajConeStack4);
+        close_grabber();
+        sleep(500);
+        lift_towers(robot.towers.liftPos2);
+        rr_drive.followTrajectory(trajJunctionM3C2FromStack);
+        open_grabber();
+        sleep(500);
+        // Add more cycles here
+        // Drive to signal zone
         rr_drive.followTrajectory(trajSignalZone);
         lift_towers(robot.towers.liftPos0);
 

@@ -17,21 +17,22 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 public class Drive_Mecanum {
-    //Hardware Components
-    public DcMotor driveLF = null; //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
+
+    // Hardware Components
+    public DcMotor driveLF = null; // https:// www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     public DcMotor driveRF = null;
     public DcMotor driveLB = null;
     public DcMotor driveRB = null;
 
-    //Variables
+    // Variables
     public int slowMo = 1;
 
-    //Constructor
+    // Constructor
     public Drive_Mecanum() {
     }
 
     public void init(HardwareMap hwMap) {
-        //Define and Initialize Motors
+        // Define and Initialize Motors
         driveLF = hwMap.get(DcMotor.class, "left_front_drive");
         driveRF = hwMap.get(DcMotor.class, "right_front_drive");
         driveLB = hwMap.get(DcMotor.class, "left_back_drive");
