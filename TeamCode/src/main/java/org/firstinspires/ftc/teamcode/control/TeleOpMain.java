@@ -127,7 +127,10 @@ public class TeleOpMain extends OpMode {
         boolean setArmPos1 = gamepad2.b;
         boolean setArmPos2 = gamepad2.x;
         boolean setArmPos3 = gamepad2.y;
-        boolean setArmPosTest = gamepad2.right_stick_button;
+        boolean liftPosConeStack2 = gamepad2.dpad_left;
+        boolean liftPosConeStack3 = gamepad2.dpad_right;
+        boolean liftPosConeStack4 = gamepad2.left_stick_button;
+        boolean liftPosConeStack5 = gamepad2.right_stick_button;
 
         // Code to move arm
         if (setArmPos0) {
@@ -146,10 +149,21 @@ public class TeleOpMain extends OpMode {
             robot.towers.towers_lift(robot.towers.liftPos3);
         }
 
-        if (setArmPosTest) {
-            robot.towers.towers_lift(robot.towers.liftPosTest);
+        if (liftPosConeStack2) {
+            robot.towers.towers_lift(robot.towers.liftPosConeStack2);
         }
 
+        if (liftPosConeStack3) {
+            robot.towers.towers_lift(robot.towers.liftPosConeStack3);
+        }
+
+        if (liftPosConeStack4) {
+            robot.towers.towers_lift(robot.towers.liftPosConeStack4);
+        }
+
+        if (liftPosConeStack5) {
+            robot.towers.towers_lift(robot.towers.liftPosConeStack5);
+        }
 
         // ARM CODE (without encoder)
         // Variables for arm

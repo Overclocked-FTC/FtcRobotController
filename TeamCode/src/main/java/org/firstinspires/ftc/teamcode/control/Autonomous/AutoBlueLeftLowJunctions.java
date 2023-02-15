@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
-@Disabled
+
 @Autonomous(name = "Auto Blue Left Low Junctions", preselectTeleOp = "TeleOp_Iterative")
 public class AutoBlueLeftLowJunctions extends AutoBase {
 
