@@ -108,16 +108,13 @@ public class TeleOpMain extends OpMode {
         robot.drive.driveRB.setPower(rightBackPower);
 
         // Go Slow/Fast code
-        boolean slowMoButton = gamepad1.right_bumper;
+        double slowMoButton = gamepad1.right_trigger;
 
-        if (slowMoButton && !changed) {
-            if (robot.drive.slowMo == 1) {
-                robot.drive.slowMo = 2;
-            } else {
-                robot.drive.slowMo = 1;
-            }
+        if (slowMoButton > 0) {
+            robot.drive.slowMo = 2;
             changed = true;
-        } else if (!slowMoButton) {
+        } else if (slowMoButton == 0) {
+            robot.drive.slowMo = 1;
             changed = false;
         }
 

@@ -111,13 +111,10 @@ public class TeleOpSingleController extends OpMode {
         double slowMoButton = gamepad1.right_trigger;
 
         if (slowMoButton > 0) {
-            if (robot.drive.slowMo == 1) {
-                robot.drive.slowMo = 2;
-            } else {
-                robot.drive.slowMo = 1;
-            }
+            robot.drive.slowMo = 2;
             changed = true;
         } else if (slowMoButton == 0) {
+            robot.drive.slowMo = 1;
             changed = false;
         }
 

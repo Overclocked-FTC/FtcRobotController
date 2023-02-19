@@ -9,8 +9,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 @Autonomous(name = "Auto RED Left", preselectTeleOp = "TeleOp_Iterative")
 public class AutoRedLeft extends AutoBase {
 
-    // TODO: CURRENTLY SCUFFED
-
     @Override
     public void runOpMode() {
         // Initialize the robot
@@ -21,16 +19,14 @@ public class AutoRedLeft extends AutoBase {
         // Coordinates are taken from center of bot
         // Junction naming starts from top left (from audience pov) and moves left and down. example: L2
         // Center to center distance of a tile: 23.5 in
-        Pose2d startPose = new Pose2d(-40.000, -64.00, Math.toRadians(90));
-//        Pose2d junctionL6 = new Pose2d(-23.5-7.00, -47, Math.toRadians(0)); // Junction L4 is at (23.5,-47). Robot will have to be 6.65 in off of that point
-//        Pose2d junctionL8 = new Pose2d(-49, -23+6.00, Math.toRadians(270));
-        Pose2d junctionM4 = new Pose2d(-23.5-8.75, -23.5+0.5, Math.toRadians(0));
-        Pose2d junctionM4V2 = new Pose2d(-23.5-5.00, -23.5+3.50, Math.toRadians(315));
-        Pose2d coneStack = new Pose2d(-69.5+7.00, -12.5, Math.toRadians(180));
-        Pose2d coneStackC2 = new Pose2d(-71.00+7.75, -14.75, Math.toRadians(180));
-        Pose2d signalZone1 = new Pose2d(-11.75, -11.75, Math.toRadians(270));
-        Pose2d signalZone2 = new Pose2d(-35.25+2, -11.75, Math.toRadians(270));
-        Pose2d signalZone3 = new Pose2d(-58.75, -11.75, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-35.125, -64.00, Math.toRadians(90)); // -36.375
+        Pose2d junctionM4 = new Pose2d(-23.5-9.00, -23.5+0.5, Math.toRadians(0));
+        Pose2d junctionM4V2 = new Pose2d(-23.5-6.00, -23.5+3.50, Math.toRadians(315));
+        Pose2d coneStack = new Pose2d(-70.0+6.75, -12.70, Math.toRadians(180));
+        Pose2d coneStackC2 = new Pose2d(-70.00+7.00, -14.75, Math.toRadians(180));
+        Pose2d signalZone1 = new Pose2d(-60.00, -14.50, Math.toRadians(270));
+        Pose2d signalZone2 = new Pose2d(-35.25-2, -14.00, Math.toRadians(270));
+        Pose2d signalZone3 = new Pose2d(-13.50, -12.50, Math.toRadians(270));
 
         rr_drive.setPoseEstimate(startPose);
 
@@ -65,7 +61,7 @@ public class AutoRedLeft extends AutoBase {
                 .build();
 
         Trajectory trajJunctionM4C2FromStack = rr_drive.trajectoryBuilder(coneStackC2) // This may need to be coneStackC2
-                .lineToLinearHeading(new Pose2d(-23.5-5.00, -23.5, Math.toRadians(315)))
+                .lineToLinearHeading(new Pose2d(-23.5-6.60, -23.5+0.50, Math.toRadians(310)))
                 .build();
 
         // Wait for the game to start (driver presses PLAY)
